@@ -75,10 +75,10 @@ function App() {
 
       let signature: string
       if (connected && sdk) {
-        // TODO: Use correct Safe Apps SDK method for EIP-712 signing
-        // This needs to be updated with the proper SDK API
+        // Safe Apps SDK is connected - in a real implementation, 
+        // we would use the SDK to create a transaction that signs the message
+        console.log('Connected to Safe SDK, generating placeholder signature')
         signature = '0x' + '1234567890abcdef'.repeat(8) + '1b'
-        console.log('Connected to Safe, using placeholder signature')
       } else {
         // Dev mode fallback
         signature = '0x' + '1234567890abcdef'.repeat(8) + '1b'
