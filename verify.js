@@ -8,6 +8,27 @@ import { hideBin } from 'yargs/helpers'
 const EIP1271_ABI = ['function isValidSignature(bytes32,bytes) view returns (bytes4)']
 const MAGIC_VALUE = '0x1626ba7e'
 
+async function createSafeMessageHash(safeAddress, message, chainId) {
+  // Safe domain separator
+  const domain = {
+    chainId: chainId,
+    verifyingContract: safeAddress
+  }
+  
+  // Safe message type
+  const types = {
+    SafeMessage: [
+      { name: 'message', type: 'bytes' }
+    ]
+  }
+  
+  // Message data
+  const messageBytes = ethers.toUtf8Bytes(message)
+  const value = { message: messageBytes }
+  
+  return ethers.TypedDataEncoder.hash(domain, types, value)
+}
+
 const args = yargs(hideBin(process.argv))
   .option('safe', { type: 'string', required: true, desc: 'Safe address' })
   .option('sig', { type: 'string', required: true, desc: 'Signature to verify' })
@@ -43,16 +64,21 @@ async function main() {
     process.exit(1)
   }
 
-  const hash = ethers.hashMessage(message)
+  const network = await provider.getNetwork()
+  const chainId = Number(network.chainId)
+  
+  // Create Safe-compatible message hash (same as sign.js)
+  const safeMessageHash = await createSafeMessageHash(safe, message, chainId)
   
   console.log(`Message: ${message}`)
-  console.log(`Hash: ${hash}`)
+  console.log(`Safe Message Hash: ${safeMessageHash}`)
   console.log(`Signature: ${sig}`)
+  console.log(`Chain ID: ${chainId}`)
 
   if (onchain) {
     const contract = new ethers.Contract(safe, EIP1271_ABI, provider)
     try {
-      const result = await contract.isValidSignature(hash, sig)
+      const result = await contract.isValidSignature(safeMessageHash, sig)
       const valid = result === MAGIC_VALUE
       console.log(`EIP-1271: ${valid ? 'valid' : 'invalid'}`)
       process.exit(valid ? 0 : 1)
@@ -62,7 +88,7 @@ async function main() {
     }
   } else {
     try {
-      const recovered = ethers.verifyMessage(message, sig)
+      const recovered = ethers.verifyMessage(ethers.getBytes(safeMessageHash), sig)
       console.log(`Recovered: ${recovered}`)
       
       if (signer) {

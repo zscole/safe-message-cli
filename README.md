@@ -1,6 +1,6 @@
 # safe-message-cli
 
-Sign and verify messages with Gnosis Safe.
+Sign and verify messages with Gnosis Safe using EIP-712 domain separation and EIP-1271 verification.
 
 ## Install
 
