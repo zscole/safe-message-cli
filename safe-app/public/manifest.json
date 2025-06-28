@@ -1,5 +1,9 @@
 {
   "name": "Safe Message Tools",
   "description": "EIP-712 message signing and EIP-1271 verification for Safe accounts",
-  "iconPath": "logo.svg"
+  "iconPath": "logo.svg",
+  "providedBy": {
+    "name": "Safe Message CLI",
+    "url": "https://github.com/zscole/safe-message-cli"
+  }
 } 
