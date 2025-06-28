@@ -24,7 +24,7 @@ function App() {
   const [message, setMessage] = useState<string>('')
   const [result, setResult] = useState<SignedMessage | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
-  const [tab, setTab] = useState<'sign' | 'verify' | 'messages'>('sign')
+  const [tab, setTab] = useState<'sign' | 'verify' | 'messages' | 'debug'>('debug')
   const [devMode, setDevMode] = useState<boolean>(false)
   const [messages, setMessages] = useState<SignedMessage[]>([])
 
@@ -153,6 +153,12 @@ function App() {
 
       <nav className="tabs">
         <button 
+          className={tab === 'debug' ? 'tab active' : 'tab'}
+          onClick={() => setTab('debug')}
+        >
+          Debug
+        </button>
+        <button 
           className={tab === 'sign' ? 'tab active' : 'tab'}
           onClick={() => setTab('sign')}
         >
@@ -171,6 +177,32 @@ function App() {
           Messages ({messages.length})
         </button>
       </nav>
+
+      {tab === 'debug' && (
+        <div className="section">
+          <h3>Safe SDK Debug</h3>
+          <div className="result">
+            <div className="result-item">
+              <strong>Connected:</strong> {connected ? 'YES' : 'NO'}
+            </div>
+            <div className="result-item">
+              <strong>SDK Available:</strong> {sdk ? 'YES' : 'NO'}
+            </div>
+            <div className="result-item">
+              <strong>Safe Object:</strong>
+              <pre style={{fontSize: '12px', background: '#f5f5f5', padding: '8px'}}>
+                {JSON.stringify(safe, null, 2)}
+              </pre>
+            </div>
+            <div className="result-item">
+              <strong>User Agent:</strong> {navigator.userAgent}
+            </div>
+            <div className="result-item">
+              <strong>Parent Origin:</strong> {window.location !== window.parent.location ? document.referrer : 'Same origin'}
+            </div>
+          </div>
+        </div>
+      )}
 
       {tab === 'sign' && (
         <div className="section">
