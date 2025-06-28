@@ -13,8 +13,8 @@
   "scripts": {
     "dev": "cd safe-app && npm start",
     "build": "cd safe-app && npm run build",
-    "install-all": "npm install && cd safe-app && npm install --legacy-peer-deps",
-    "test": "echo 'Run manual tests with CLI tools' && exit 0"
+    "setup": "npm install && cd safe-app && npm install --legacy-peer-deps",
+    "test": "echo 'no tests' && exit 0"
   },
   "keywords": [
     "safe-app",

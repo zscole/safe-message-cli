@@ -11,7 +11,7 @@ const cli = yargs(hideBin(process.argv))
   .option('msg', { type: 'string', required: true, desc: 'Message file' })
   .option('rpc', { type: 'string', required: true, desc: 'RPC URL' })
   .option('wallet', { type: 'string', required: true, choices: ['ledger'], desc: 'Hardware wallet' })
-  .option('path', { type: 'string', default: "m/44'/60'/0'/0/0", desc: 'Derivation path' })
+  .option('path', { type: 'string', default: 'm/44\'/60\'/0\'/0/0', desc: 'Derivation path' })
   .help()
   .argv
 

@@ -1,86 +1,64 @@
 # Safe Message Tools
 
-A complete Safe App for message signing and verification with EIP-712 and EIP-1271 support.
+Safe App + CLI tools for EIP-712 message signing with multi-signature coordination.
 
-## 🚀 Quick Setup
+## Setup
 
 ```bash
-# Install everything
-npm run install-all
-
-# Start Safe App
+npm run setup
 npm run dev
 ```
 
-Then add `http://localhost:3000` as a custom app in your Safe interface.
+Add `http://localhost:3000` as a custom app in your Safe interface.
 
-## 📁 Project Structure
+## Structure
 
 ```
-safe-message-tools/
-├── safe-app/          # Primary Safe App (React)
-│   ├── src/
-│   ├── public/
-│   └── package.json
-├── cli/               # CLI automation tools
-│   ├── sign.js
-│   ├── verify.js
-│   ├── sign-hw.js
-│   ├── collect-signatures.js
-│   └── safe-transaction.js
-├── lib/               # Shared utilities
-│   └── safe.js
-└── package.json       # Project coordination
+├── safe-app/          # React app for Safe interface
+├── cli/               # Command-line tools  
+├── lib/               # Shared EIP-712 utilities
+└── package.json
 ```
 
-## 🌐 Safe App (Primary Interface)
+## Safe App
 
-Browser-based Safe App that integrates directly with your Safe interface:
-- **Message signing** through Safe's multi-signature interface
-- **EIP-1271 verification** for onchain signature validation  
-- **Multi-signature workflows** with automatic Safe context
-- **Professional UI** matching Safe's design language
+Simplified browser app that works within Safe interface:
+- Sign messages using Safe Apps SDK + ethers.js
+- Local storage for message history (dev/demo)
+- Clean interface without heavy dependencies
+- No webpack polyfill issues
 
-### Development Mode
-The Safe App includes a development mode for testing outside the Safe interface.
+## CLI Tools
 
-## 🖥️ CLI Tools (Automation Support)
+Production automation tools for developers:
 
-Command-line tools for developers and automation:
-- **sign.js** - Sign messages with private keys  
-- **verify.js** - Verify signatures (offchain/onchain)  
-- **sign-hw.js** - Hardware wallet signing (Ledger)
-- **collect-signatures.js** - Multi-signature collection
-- **safe-transaction.js** - Safe transaction management
-
-### CLI Usage
 ```bash
-# Sign message
+# Sign with private key
 node cli/sign.js --safe 0x... --key 0x... --msg message.txt --rpc https://...
 
-# Verify signature  
+# Verify signature onchain
 node cli/verify.js --safe 0x... --sig 0x... --msg message.txt --rpc https://... --onchain
 
-# Global installation (optional)
-npm install -g .
-safe-sign --safe 0x... --key 0x... --msg message.txt --rpc https://...
+# Hardware wallet signing
+node cli/sign-hw.js --safe 0x... --msg message.txt --rpc https://... --wallet ledger
+
+# Coordinate multiple signatures  
+node cli/collect-signatures.js --safe 0x... --msg message.txt --rpc https://... --sig 0x... --signer 0x...
 ```
 
-## Use Cases
-
-**Safe App**: Primary interface for teams and manual operations  
-**CLI Tools**: Perfect for automation, CI/CD, and server-side workflows
+Global install: `npm install -g .` then use `safe-sign`, `safe-verify`, etc.
 
 ## Architecture
 
-Both interfaces share core EIP-712 utilities (`lib/safe.js`):
-- Safe App uses Safe's multi-signature interface
-- CLI tools support direct private key and hardware wallet signing  
-- Standard RPC calls only - no external services required
-- Full EIP-1271 onchain verification support
+**Safe App**: Uses only Safe Apps SDK + ethers.js for clean browser compatibility. Avoids heavy Protocol Kit dependencies that cause webpack issues.
+
+**CLI Tools**: Full-featured with Protocol Kit, API Kit, hardware wallet support, and file-based coordination for production workflows.
+
+Both use the same EIP-712 domain separation for message compatibility.
 
 ## Standards
 
-- **EIP-712** for typed data signing with Safe domain separation
-- **EIP-1271** for onchain signature verification
-- **Safe Apps SDK** for seamless Safe interface integration
+- EIP-712 typed data with Safe domain
+- EIP-1271 onchain signature verification  
+- Safe Apps SDK integration
+- Browser-compatible dependencies

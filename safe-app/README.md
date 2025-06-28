@@ -1,13 +1,19 @@
-# Safe Message Tools - Safe App
+# Safe Message App
 
-A Safe App for signing and verifying messages using EIP-712 domain separation, built with the [Safe Apps SDK](https://docs.safe.global/apps-sdk-get-started).
+Simplified Safe App for EIP-712 message signing within Safe interface.
 
-## Features
+## Architecture
 
-- **Message Signing**: Sign messages using Safe's multi-signature capabilities
-- **Signature Verification**: Verify signatures against the Safe contract using EIP-1271
-- **Automatic Safe Context**: No need to manually enter Safe address or chain ID
-- **Clean UI**: Professional interface matching Safe's design patterns
+Uses minimal dependencies to avoid webpack polyfill issues:
+- **Safe Apps SDK** for Safe interface integration
+- **ethers.js** for EIP-712 signing
+- **localStorage** for message history (dev/demo)
+
+## Why Simplified?
+
+The full Safe Protocol Kit + API Kit dependencies cause webpack 5 polyfill issues with deprecated `ethereumjs-util` that requires Node.js modules (`stream`, `assert`, etc.) that don't work in browsers without complex polyfills.
+
+This simplified version provides the core functionality without the headaches.
 
 ## Development
 
@@ -20,7 +26,7 @@ A Safe App for signing and verifying messages using EIP-712 domain separation, b
 
 ```bash
 cd safe-app
-npm install
+npm install --legacy-peer-deps
 npm start
 ```
 
@@ -72,12 +78,13 @@ Once deployed, you can submit your app to the Safe App Store:
 4. Click "Verify with Safe Contract" → Confirms validity
 ```
 
-## Architecture
+## Features
 
-- Uses `@safe-global/safe-apps-react-sdk` for Safe integration
-- Reuses core utilities from CLI tools (`lib/safe.js`)
-- EIP-712 structured data signing with Safe domain
-- EIP-1271 contract-based signature verification
+- Sign messages through Safe interface
+- View message history 
+- Development mode for testing
+- Clean, minimal dependencies
+- No webpack polyfill errors
 
 ## API
 
@@ -91,3 +98,7 @@ Once deployed, you can submit your app to the Safe App Store:
 
 - `safeTypedData(safe, message, chainId)` - Generate EIP-712 structure
 - `safeMessageHash(safe, message, chainId)` - Calculate message hash 
+
+## Production Use
+
+For production multi-sig coordination, use the CLI tools which have full Protocol Kit + API Kit support without browser constraints. 
