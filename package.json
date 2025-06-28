@@ -11,7 +11,7 @@
     "safe-tx": "./cli/safe-transaction.js"
   },
   "scripts": {
-    "dev": "cd safe-app && npm start",
+    "dev": "cd safe-app && npm run dev",
     "build": "cd safe-app && npm run build",
     "setup": "npm install && cd safe-app && npm install --legacy-peer-deps",
     "test": "echo 'no tests' && exit 0"

@@ -9,7 +9,21 @@ export function safeTypedData(safe: string, message: string, chainId: string | n
   }
 }
 
-export function safeMessageHash(safe: string, message: string, chainId: string | number): string {
-  const { domain, types, value } = safeTypedData(safe, message, chainId)
-  return ethers.TypedDataEncoder.hash(domain, types, value)
+export function safeMessageHash(safeAddress: string, message: string, chainId: string): string {
+  const domain = {
+    chainId: parseInt(chainId),
+    verifyingContract: safeAddress
+  };
+
+  const types = {
+    SafeMessage: [
+      { name: 'message', type: 'bytes' }
+    ]
+  };
+
+  const value = {
+    message: ethers.toUtf8Bytes(message)
+  };
+
+  return ethers.TypedDataEncoder.hash(domain, types, value);
 } 

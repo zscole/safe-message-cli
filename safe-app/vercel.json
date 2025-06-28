@@ -4,8 +4,8 @@
       "source": "/(.*)",
       "headers": [
         {
-          "key": "Content-Security-Policy",
-          "value": "frame-ancestors 'self' https://app.safe.global https://*.safe.global;"
+          "key": "X-Frame-Options",
+          "value": "ALLOWALL"
         },
         {
           "key": "Access-Control-Allow-Origin",
