@@ -1,0 +1,29 @@
+{
+  "name": "safe-message-cli",
+  "version": "1.0.0",
+  "description": "Sign and verify messages with Gnosis Safe",
+  "type": "module",
+  "bin": {
+    "safe-sign": "./sign.js",
+    "safe-verify": "./verify.js"
+  },
+  "scripts": {
+    "sign": "node sign.js",
+    "verify": "node verify.js"
+  },
+  "keywords": ["gnosis", "safe", "ethereum", "eip1271"],
+  "author": "Zak Cole <zcole@linux.com> (https://github.com/zscole)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zscole/safe-message-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zscole/safe-message-cli/issues"
+  },
+  "homepage": "https://github.com/zscole/safe-message-cli#readme",
+  "dependencies": {
+    "ethers": "^6.8.0",
+    "yargs": "^17.7.2"
+  }
+} 
