@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
 import { ethers } from 'ethers';
 import './App.css';
@@ -14,8 +14,84 @@ function App() {
   const [isValidSignature, setIsValidSignature] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [debugInfo, setDebugInfo] = useState<string[]>([]);
 
-  if (!connected) return <p>Loading Safe context...</p>;
+  // Debug logging effect
+  useEffect(() => {
+    const logs: string[] = [];
+    
+    // Check iframe context
+    const inIframe = window.parent !== window;
+    logs.push(`🖼️ Running in iframe: ${inIframe}`);
+    
+    // Check Safe SDK state
+    logs.push(`🔗 SDK connected: ${connected}`);
+    logs.push(`📱 Safe object exists: ${!!safe}`);
+    
+    if (safe) {
+      logs.push(`🏠 Safe address: ${safe.safeAddress}`);
+      logs.push(`⛓️ Chain ID: ${safe.chainId}`);
+    }
+    
+    // Check SDK methods
+    logs.push(`🛠️ SDK.txs exists: ${!!sdk?.txs}`);
+    logs.push(`🛠️ SDK.eth exists: ${!!sdk?.eth}`);
+    
+    // Browser context
+    logs.push(`🌐 User agent: ${navigator.userAgent.slice(0, 50)}...`);
+    logs.push(`📍 Current URL: ${window.location.href}`);
+    
+    setDebugInfo(logs);
+    
+    // Console logging for iframe inspection
+    console.log('🔍 Safe App Debug Info:', {
+      inIframe,
+      connected,
+      safeExists: !!safe,
+      safeAddress: safe?.safeAddress,
+      chainId: safe?.chainId,
+      sdkExists: !!sdk,
+      txsExists: !!sdk?.txs,
+      ethExists: !!sdk?.eth
+    });
+    
+  }, [connected, safe, sdk]);
+
+  // Early return with debug info if not connected
+  if (!connected) {
+    return (
+      <div className="App">
+        <div className="app-header">
+          <h1>🔧 Safe App Diagnostics</h1>
+          <p>Debugging Safe Apps SDK connection...</p>
+        </div>
+        
+        <div className="result-card" style={{ background: '#fff3cd', borderColor: '#ffeaa7' }}>
+          <h4>⏳ Loading Safe context...</h4>
+          <div style={{ marginTop: '16px' }}>
+            {debugInfo.map((log, index) => (
+              <div key={index} style={{ 
+                fontFamily: 'monospace', 
+                fontSize: '12px', 
+                padding: '4px 0',
+                color: '#666'
+              }}>
+                {log}
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: '16px', fontSize: '14px', color: '#856404' }}>
+            <strong>Expected behavior:</strong>
+            <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
+              <li>Should be running in iframe: true</li>
+              <li>SDK should connect within 2-3 seconds</li>
+              <li>Safe address should appear once connected</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleSignAndVerify = async () => {
     if (!message.trim()) {
@@ -96,7 +172,7 @@ function App() {
   return (
     <div className="App">
       <div className="app-header">
-        <h1>Safe Message Signing</h1>
+        <h1>✅ Safe Message Signing</h1>
         <p>EIP-712 message signing with EIP-1271 verification</p>
       </div>
 
@@ -105,6 +181,23 @@ function App() {
         <div className="safe-info">
           <p><strong>Safe Address:</strong> <code>{safe.safeAddress}</code></p>
           <p><strong>Chain ID:</strong> {safe.chainId}</p>
+        </div>
+      </div>
+
+      {/* Debug Panel - Remove this in production */}
+      <div className="result-card" style={{ background: '#f8f9fa', borderColor: '#e9ecef', marginBottom: '20px' }}>
+        <h4>🔍 Connection Debug Info</h4>
+        <div style={{ marginTop: '12px' }}>
+          {debugInfo.map((log, index) => (
+            <div key={index} style={{ 
+              fontFamily: 'monospace', 
+              fontSize: '11px', 
+              padding: '2px 0',
+              color: '#495057'
+            }}>
+              {log}
+            </div>
+          ))}
         </div>
       </div>
 
