@@ -1,0 +1,10 @@
+{
+  "name": "Safe Message Tools",
+  "description": "Sign and verify messages using Safe EIP-712 format",
+  "version": "1.0.0",
+  "iconPath": "logo.svg",
+  "providedBy": {
+    "name": "Safe Message Tools",
+    "url": "https://github.com/zscole/safe-message-tools"
+  }
+} 

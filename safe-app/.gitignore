@@ -1,35 +1,25 @@
-# Dependencies
-node_modules
-/.pnp
-.pnp.js
-
-# Production build
-/build
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
 # Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
+node_modules
+dist
+dist-ssr
+*.local
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db 
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.vercel

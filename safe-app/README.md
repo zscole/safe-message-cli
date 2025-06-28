@@ -1,104 +1,69 @@
-# Safe Message App
+# React + TypeScript + Vite
 
-Simplified Safe App for EIP-712 message signing within Safe interface.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Architecture
+Currently, two official plugins are available:
 
-Uses minimal dependencies to avoid webpack polyfill issues:
-- **Safe Apps SDK** for Safe interface integration
-- **ethers.js** for EIP-712 signing
-- **localStorage** for message history (dev/demo)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Why Simplified?
+## Expanding the ESLint configuration
 
-The full Safe Protocol Kit + API Kit dependencies cause webpack 5 polyfill issues with deprecated `ethereumjs-util` that requires Node.js modules (`stream`, `assert`, etc.) that don't work in browsers without complex polyfills.
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-This simplified version provides the core functionality without the headaches.
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-## Development
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
 
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-
-### Setup
-
-```bash
-cd safe-app
-npm install --legacy-peer-deps
-npm start
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-The app will run on `http://localhost:3000`
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-### Testing in Safe
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-1. Open your Safe at [app.safe.global](https://app.safe.global)
-2. Go to Apps → Add custom app
-3. Enter the app URL: `http://localhost:3000`
-4. The app will load with automatic Safe context
-
-## Deployment
-
-### Build for production
-
-```bash
-npm run build
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-
-### Deploy options
-
-1. **IPFS**: Upload the `build` folder to IPFS for decentralized hosting
-2. **Vercel/Netlify**: Connect your GitHub repo for automatic deployments  
-3. **GitHub Pages**: Use the built files for static hosting
-
-### Submit to Safe App Store
-
-Once deployed, you can submit your app to the Safe App Store:
-
-1. Fork the [Safe Apps repository](https://github.com/safe-global/safe-apps)
-2. Add your app details to the registry
-3. Submit a pull request
-
-## Usage
-
-### Within Safe Interface
-
-1. Open the app in your Safe
-2. **Sign tab**: Enter a message and click "Sign Message"
-3. **Verify tab**: View and verify the signature using EIP-1271
-
-### Example Flow
-
-```
-1. Enter message: "Approve proposal #123"
-2. Click "Sign Message" → Safe prompts for signatures
-3. Once signed, switch to "Verify" tab
-4. Click "Verify with Safe Contract" → Confirms validity
-```
-
-## Features
-
-- Sign messages through Safe interface
-- View message history 
-- Development mode for testing
-- Clean, minimal dependencies
-- No webpack polyfill errors
-
-## API
-
-### Safe Apps SDK Methods Used
-
-- `useSafeAppsSDK()` - Get Safe context and SDK instance
-- `sdk.signTypedMessage()` - Request EIP-712 signature from Safe
-- `sdk.eth.call()` - Verify signatures via Safe contract
-
-### Core Functions
-
-- `safeTypedData(safe, message, chainId)` - Generate EIP-712 structure
-- `safeMessageHash(safe, message, chainId)` - Calculate message hash 
-
-## Production Use
-
-For production multi-sig coordination, use the CLI tools which have full Protocol Kit + API Kit support without browser constraints. 
