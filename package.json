@@ -1,34 +1,38 @@
 {
-  "name": "safe-message-cli",
+  "name": "safe-message-tools",
   "version": "1.0.0",
-  "description": "CLI tools for Gnosis Safe message signing and verification",
+  "description": "Safe App for message signing and verification with CLI automation tools",
   "type": "module",
   "bin": {
-    "safe-sign": "./sign.js",
-    "safe-verify": "./verify.js",
-    "safe-hw": "./sign-hw.js",
-    "safe-collect": "./collect-signatures.js",
-    "safe-tx": "./safe-transaction.js"
+    "safe-sign": "./cli/sign.js",
+    "safe-verify": "./cli/verify.js",
+    "safe-hw": "./cli/sign-hw.js",
+    "safe-collect": "./cli/collect-signatures.js",
+    "safe-tx": "./cli/safe-transaction.js"
   },
   "scripts": {
-    "test": "echo 'Run manual tests with example scripts' && exit 0"
+    "dev": "cd safe-app && npm start",
+    "build": "cd safe-app && npm run build",
+    "install-all": "npm install && cd safe-app && npm install --legacy-peer-deps",
+    "test": "echo 'Run manual tests with CLI tools' && exit 0"
   },
   "keywords": [
+    "safe-app",
     "gnosis-safe",
     "ethereum",
     "eip712",
     "eip1271",
     "multisig",
-    "hardware-wallet",
+    "message-signing",
     "cli"
   ],
   "author": "Zak Cole <zcole@linux.com>",
   "license": "MIT",
-  "repository": "github:zscole/safe-message-cli",
+  "repository": "github:zscole/safe-message-tools",
   "bugs": {
-    "url": "https://github.com/zscole/safe-message-cli/issues"
+    "url": "https://github.com/zscole/safe-message-tools/issues"
   },
-  "homepage": "https://github.com/zscole/safe-message-cli#readme",
+  "homepage": "https://github.com/zscole/safe-message-tools#readme",
   "dependencies": {
     "ethers": "^6.8.0",
     "yargs": "^17.7.2"

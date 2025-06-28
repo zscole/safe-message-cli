@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { readFileSync } from 'fs'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { safeTypedData, safeMessageHash } from './lib/safe.js'
+import { safeTypedData, safeMessageHash } from '../lib/safe.js'
 
 const EIP1271_ABI = ['function isValidSignature(bytes32,bytes) view returns (bytes4)']
 const EIP1271_MAGIC = '0x1626ba7e'

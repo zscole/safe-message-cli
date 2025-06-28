@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { readFileSync } from 'fs'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { safeTypedData, safeMessageHash } from './lib/safe.js'
+import { safeTypedData, safeMessageHash } from '../lib/safe.js'
 
 const cli = yargs(hideBin(process.argv))
   .option('safe', { type: 'string', required: true, desc: 'Safe address' })
