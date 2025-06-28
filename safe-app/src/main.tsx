@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import SafeProvider from '@safe-global/safe-apps-react-sdk'
+import { SafeProvider } from '@safe-global/safe-apps-react-sdk'
 import App from './App.tsx'
 import './index.css'
 
