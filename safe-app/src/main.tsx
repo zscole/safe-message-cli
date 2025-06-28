@@ -5,9 +5,7 @@ import SafeProvider from '@safe-global/safe-apps-react-sdk'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <SafeProvider>
-      <App />
-    </SafeProvider>
-  </React.StrictMode>
+  <SafeProvider>
+    <App />
+  </SafeProvider>
 )
