@@ -4,41 +4,21 @@ import { ethers } from 'ethers'
 import { readFileSync } from 'fs'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
+import { safeTypedData, safeMessageHash } from './lib/safe.js'
 
-const args = yargs(hideBin(process.argv))
+const cli = yargs(hideBin(process.argv))
   .option('safe', { type: 'string', required: true, desc: 'Safe address' })
-  .option('key', { type: 'string', required: true, desc: 'Owner private key' })
-  .option('msg', { type: 'string', required: true, desc: 'Message file path' })
-  .option('rpc', { type: 'string', required: true, desc: 'RPC endpoint' })
+  .option('key', { type: 'string', required: true, desc: 'Private key' })
+  .option('msg', { type: 'string', required: true, desc: 'Message file' })
+  .option('rpc', { type: 'string', required: true, desc: 'RPC URL' })
   .help()
   .argv
 
-async function createSafeMessageHash(safeAddress, message, chainId) {
-  // Safe domain separator
-  const domain = {
-    chainId: chainId,
-    verifyingContract: safeAddress
-  }
-  
-  // Safe message type
-  const types = {
-    SafeMessage: [
-      { name: 'message', type: 'bytes' }
-    ]
-  }
-  
-  // Message data
-  const messageBytes = ethers.toUtf8Bytes(message)
-  const value = { message: messageBytes }
-  
-  return ethers.TypedDataEncoder.hash(domain, types, value)
-}
-
 async function main() {
-  const { safe, key, msg, rpc } = args
+  const { safe, key, msg, rpc } = cli
   
   if (!ethers.isAddress(safe)) {
-    console.error('Invalid Safe address')
+    console.error('invalid safe address')
     process.exit(1)
   }
 
@@ -46,36 +26,32 @@ async function main() {
   try {
     message = readFileSync(msg, 'utf8').trim()
   } catch {
-    console.error(`Cannot read ${msg}`)
+    console.error(`failed to read ${msg}`)
     process.exit(1)
   }
 
   const provider = new ethers.JsonRpcProvider(rpc)
-  const signer = new ethers.Wallet(key, provider)
+  const wallet = new ethers.Wallet(key, provider)
   
+  let chainId
   try {
-    await provider.getNetwork()
+    const network = await provider.getNetwork()
+    chainId = Number(network.chainId)
   } catch {
-    console.error('RPC connection failed')
+    console.error('rpc connection failed')
     process.exit(1)
   }
 
-  const network = await provider.getNetwork()
-  const chainId = Number(network.chainId)
-  
-  // Create Safe-compatible message hash
-  const safeMessageHash = await createSafeMessageHash(safe, message, chainId)
-  
-  // Sign the Safe message hash
-  const signature = await signer.signMessage(ethers.getBytes(safeMessageHash))
-  const signerAddress = signer.address
+  const { domain, types, value } = safeTypedData(safe, message, chainId)
+  const messageHash = safeMessageHash(safe, message, chainId)
+  const signature = await wallet.signTypedData(domain, types, value)
 
   console.log(`Message: ${message}`)
-  console.log(`Safe Message Hash: ${safeMessageHash}`)
-  console.log(`Signature: ${signature}`)
-  console.log(`Signer: ${signerAddress}`)
   console.log(`Safe: ${safe}`)
-  console.log(`Chain ID: ${chainId}`)
+  console.log(`Chain: ${chainId}`)
+  console.log(`Hash: ${messageHash}`)
+  console.log(`Signature: ${signature}`)
+  console.log(`Signer: ${wallet.address}`)
 }
 
 main().catch(err => {

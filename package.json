@@ -1,23 +1,30 @@
 {
   "name": "safe-message-cli",
   "version": "1.0.0",
-  "description": "Sign and verify messages with Gnosis Safe",
+  "description": "CLI tools for Gnosis Safe message signing and verification",
   "type": "module",
   "bin": {
     "safe-sign": "./sign.js",
-    "safe-verify": "./verify.js"
+    "safe-verify": "./verify.js",
+    "safe-hw": "./sign-hw.js",
+    "safe-collect": "./collect-signatures.js",
+    "safe-tx": "./safe-transaction.js"
   },
   "scripts": {
-    "sign": "node sign.js",
-    "verify": "node verify.js"
+    "test": "echo 'Run manual tests with example scripts' && exit 0"
   },
-  "keywords": ["gnosis", "safe", "ethereum", "eip1271"],
-  "author": "Zak Cole <zcole@linux.com> (https://github.com/zscole)",
+  "keywords": [
+    "gnosis-safe",
+    "ethereum",
+    "eip712",
+    "eip1271",
+    "multisig",
+    "hardware-wallet",
+    "cli"
+  ],
+  "author": "Zak Cole <zcole@linux.com>",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zscole/safe-message-cli.git"
-  },
+  "repository": "github:zscole/safe-message-cli",
   "bugs": {
     "url": "https://github.com/zscole/safe-message-cli/issues"
   },
@@ -25,5 +32,12 @@
   "dependencies": {
     "ethers": "^6.8.0",
     "yargs": "^17.7.2"
+  },
+  "optionalDependencies": {
+    "@ledgerhq/hw-transport-node-hid": "^6.27.20",
+    "@ledgerhq/hw-app-eth": "^6.34.6"
+  },
+  "engines": {
+    "node": ">=18"
   }
 } 
