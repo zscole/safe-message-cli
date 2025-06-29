@@ -128,10 +128,10 @@ function App() {
                 <li>
                   Paste: 
                   <div className="url-with-copy">
-                    <code>https://safe-message-cli-git-main-zscoles-projects.vercel.app</code>
+                    <code>https://www.safetools.io</code>
                     <button 
                       className="copy-button-inline"
-                      onClick={() => copyToClipboard('https://safe-message-cli-git-main-zscoles-projects.vercel.app')}
+                      onClick={() => copyToClipboard('https://www.safetools.io')}
                       title="Copy URL"
                     >
                       Copy
