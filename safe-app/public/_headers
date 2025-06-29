@@ -1,5 +1,6 @@
 /*
-  X-Frame-Options: ALLOWALL
+  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self' https://app.safe.global https://*.safe.global
   Access-Control-Allow-Origin: *
   Access-Control-Allow-Methods: GET, POST, OPTIONS
   Access-Control-Allow-Headers: X-Requested-With, Content-Type, Authorization 

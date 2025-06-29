@@ -1,306 +1,299 @@
-import React, { useState, useEffect } from 'react';
-import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk';
-import { ethers } from 'ethers';
-import './App.css';
+// MIT License
+// © Zak Cole — https://numbergroup.xyz (@zscole)
+
+import React, { useState } from 'react'
+import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
+import { ethers } from 'ethers'
+import './App.css'
+
+const SIGN_MESSAGE_LIB = '0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2'
+const EIP1271_MAGIC_VALUE = '0x1626ba7e'
 
 function App() {
-  const { safe, sdk, connected } = useSafeAppsSDK();
+  console.log('🎯 App component rendering...')
   
-  // State management
-  const [message, setMessage] = useState('');
-  const [signature, setSignature] = useState('');
-  const [messageHash, setMessageHash] = useState('');
-  const [recoveredSigner, setRecoveredSigner] = useState('');
-  const [isValidSignature, setIsValidSignature] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [debugInfo, setDebugInfo] = useState<string[]>([]);
+  const { safe, sdk, connected } = useSafeAppsSDK()
+  
+  // CRITICAL: Log the exact handshake state (with safe cross-origin handling)
+  console.log('[Safe SDK Debug - CRITICAL]', {
+    iframe: window.parent !== window,
+    connected,
+    safe: safe || 'NULL',
+    sdk: sdk || 'NULL',
+    hasGlobalSafe: typeof window !== 'undefined' && (window as any).Safe,
+    currentURL: window.location.href
+  })
+  
+  console.log('🔗 Safe SDK detailed state:', { 
+    connected, 
+    safeAddress: safe?.safeAddress, 
+    chainId: safe?.chainId,
+    sdkVersion: sdk ? 'SDK loaded' : 'SDK not loaded',
+    sdkMethods: sdk ? Object.keys(sdk) : 'no SDK',
+    safeObject: safe ? Object.keys(safe) : 'no safe object'
+  })
 
-  // Debug logging effect
-  useEffect(() => {
-    const logs: string[] = [];
+  // Test SDK functionality
+  React.useEffect(() => {
+    console.log('🔄 useEffect triggered with SDK state:', { connected, sdk: !!sdk, safe: !!safe })
     
-    // Check iframe context
-    const inIframe = window.parent !== window;
-    logs.push(`🖼️ Running in iframe: ${inIframe}`);
-    
-    // Check Safe SDK state
-    logs.push(`🔗 SDK connected: ${connected}`);
-    logs.push(`📱 Safe object exists: ${!!safe}`);
-    
-    if (safe) {
-      logs.push(`🏠 Safe address: ${safe.safeAddress}`);
-      logs.push(`⛓️ Chain ID: ${safe.chainId}`);
-    }
-    
-    // Check SDK methods
-    logs.push(`🛠️ SDK.txs exists: ${!!sdk?.txs}`);
-    logs.push(`🛠️ SDK.eth exists: ${!!sdk?.eth}`);
-    
-    // Browser context
-    logs.push(`🌐 User agent: ${navigator.userAgent.slice(0, 50)}...`);
-    logs.push(`📍 Current URL: ${window.location.href}`);
-    
-    setDebugInfo(logs);
-    
-    // Console logging for iframe inspection
-    console.log('🔍 Safe App Debug Info:', {
-      inIframe,
-      connected,
-      safeExists: !!safe,
-      safeAddress: safe?.safeAddress,
-      chainId: safe?.chainId,
-      sdkExists: !!sdk,
-      txsExists: !!sdk?.txs,
-      ethExists: !!sdk?.eth
-    });
-    
-  }, [connected, safe, sdk]);
-
-  // Early return with debug info if not connected
-  if (!connected) {
-    return (
-      <div className="App">
-        <div className="app-header">
-          <h1>🔧 Safe App Diagnostics</h1>
-          <p>Debugging Safe Apps SDK connection...</p>
-        </div>
+    if (sdk) {
+      console.log('✅ SDK is available, testing methods...')
+      console.log('📋 SDK methods available:', Object.keys(sdk))
+      
+      // Test basic SDK functionality
+      if (sdk.safe) {
+        console.log('🔐 SDK.safe methods:', Object.keys(sdk.safe))
+      }
+      if (sdk.txs) {
+        console.log('📝 SDK.txs methods:', Object.keys(sdk.txs))
+      }
+      
+      // If not connected, try to manually trigger Safe detection
+      if (!connected) {
+        console.log('🔄 SDK loaded but not connected, attempting manual detection...')
         
-        <div className="result-card" style={{ background: '#fff3cd', borderColor: '#ffeaa7' }}>
-          <h4>⏳ Loading Safe context...</h4>
-          <div style={{ marginTop: '16px' }}>
-            {debugInfo.map((log, index) => (
-              <div key={index} style={{ 
-                fontFamily: 'monospace', 
-                fontSize: '12px', 
-                padding: '4px 0',
-                color: '#666'
-              }}>
-                {log}
-              </div>
-            ))}
-          </div>
-          <div style={{ marginTop: '16px', fontSize: '14px', color: '#856404' }}>
-            <strong>Expected behavior:</strong>
-            <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
-              <li>Should be running in iframe: true</li>
-              <li>SDK should connect within 2-3 seconds</li>
-              <li>Safe address should appear once connected</li>
-            </ul>
-          </div>
-        </div>
+        // Sometimes Safe needs a moment to establish connection
+        setTimeout(() => {
+          console.log('⏰ Delayed check - SDK state:', { 
+            connected, 
+            safe: !!safe, 
+            safeAddress: safe?.safeAddress 
+          })
+        }, 1000)
+        
+        setTimeout(() => {
+          console.log('⏰ Final check - SDK state:', { 
+            connected, 
+            safe: !!safe, 
+            safeAddress: safe?.safeAddress 
+          })
+        }, 3000)
+      }
+    } else {
+      console.log('❌ SDK not available in useEffect')
+    }
+  }, [sdk, connected, safe])
+  
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<{
+    originalMessage: string
+    safeMessageHash: string
+    safeTxHash: string
+    isValid: boolean
+  } | null>(null)
+  const [error, setError] = useState('')
+
+  console.log('📱 App state:', { connected, loading, hasResult: !!result, hasError: !!error })
+
+  if (!connected) {
+    console.log('❌ Not connected to Safe - showing loading state')
+    return <div style={{ padding: '20px', textAlign: 'center' }}>
+      <h2>Connecting to Safe...</h2>
+      <p>Please wait while we establish connection with your Safe.</p>
+      <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
+        <p>Debug info:</p>
+        <p>SDK: {sdk ? '✅ Loaded' : '❌ Not loaded'}</p>
+        <p>Safe: {safe ? '✅ Available' : '❌ Not available'}</p>
+        <p>Connected: {connected ? '✅ Yes' : '❌ No'}</p>
       </div>
-    );
+    </div>
   }
 
-  const handleSignAndVerify = async () => {
-    if (!message.trim()) {
-      setError('Please enter a message to sign');
-      return;
+  console.log('✅ Connected to Safe - rendering main app')
+
+  // Compute Safe EIP-712 message hash
+  const getSafeMessageHash = (message: string) => {
+    const domain = {
+      chainId: safe.chainId,
+      verifyingContract: safe.safeAddress
     }
-  
-    setLoading(true);
-    setError('');
-    setSignature('');
-    setMessageHash('');
-    setRecoveredSigner('');
-    setIsValidSignature(null);
-  
+    
+    const types = {
+      SafeMessage: [{ name: 'message', type: 'bytes' }]
+    }
+    
+    const value = {
+      message: ethers.toUtf8Bytes(message)
+    }
+    
+    return ethers.TypedDataEncoder.hash(domain, types, value)
+  }
+
+  const signAndVerify = async () => {
+    if (!message.trim()) {
+      setError('Please enter a message')
+      return
+    }
+
+    setLoading(true)
+    setError('')
+    setResult(null)
+
     try {
-      // Hash the message using ethers (EIP-191 personal message)
-      const msgHash = ethers.hashMessage(message);
-      setMessageHash(msgHash);
-  
-      // SignMessageLib contract and function ABI
-      const SIGN_MESSAGE_LIB = '0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2';
+      // Convert message to bytes for SignMessageLib
+      const messageBytes = ethers.toUtf8Bytes(message.trim())
+
+      // Create SignMessageLib transaction - uses bytes memory, not bytes32
       const signMessageInterface = new ethers.Interface([
         'function signMessage(bytes _data)'
-      ]);
-      const signMessageData = signMessageInterface.encodeFunctionData('signMessage', [msgHash]);
-  
-      // DelegateCall transaction via Safe SDK
+      ])
+      
+      const txData = signMessageInterface.encodeFunctionData('signMessage', [messageBytes])
+
       const transaction = {
         to: SIGN_MESSAGE_LIB,
         value: '0',
-        data: signMessageData,
+        data: txData,
         operation: 1 // DelegateCall
-      };
-  
-      const txResponse = await sdk.txs.send({ txs: [transaction] });
-      const safeTxHash = txResponse.safeTxHash;
-      setSignature(`Signed on-chain: ${safeTxHash}`);
-      setRecoveredSigner(safe.safeAddress);
-  
-      // ⏳ Wait for execution by polling the transaction service
-      let isExecuted = false;
-      let retry = 0;
-      while (!isExecuted && retry < 30) {
-        const txDetails = await sdk.txs.getBySafeTxHash(safeTxHash);
-        if (txDetails?.executedAt) {
-          isExecuted = true;
-          break;
+      }
+
+      // Send transaction
+      const { safeTxHash } = await sdk.txs.send({ txs: [transaction] })
+
+      // Poll for execution
+      let executed = false
+      let attempts = 0
+      const maxAttempts = 30
+
+      while (!executed && attempts < maxAttempts) {
+        const txDetails = await sdk.txs.getBySafeTxHash(safeTxHash)
+        if (txDetails.executedAt) {
+          executed = true
+          break
         }
-        await new Promise((res) => setTimeout(res, 3000));
-        retry++;
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        attempts++
       }
-  
-      if (!isExecuted) {
-        throw new Error('Signature transaction was not executed in time. Try again.');
+
+      if (!executed) {
+        throw new Error('Transaction not executed within timeout')
       }
-  
-      // EIP-1271 verification
+
+      // Get the Safe message hash that was stored by SignMessageLib
+      const safeMessageHash = getSafeMessageHash(message.trim())
+
+      // Verify signature using EIP-1271 with the Safe message hash
       const isValidSigInterface = new ethers.Interface([
         'function isValidSignature(bytes32 _hash, bytes _signature) external view returns (bytes4)'
-      ]);
-      const callData = isValidSigInterface.encodeFunctionData('isValidSignature', [msgHash, '0x']);
-  
-      const result = await sdk.eth.call([{
+      ])
+
+      const callData = isValidSigInterface.encodeFunctionData('isValidSignature', [
+        safeMessageHash,
+        '0x' // Empty signature for on-chain signed messages
+      ])
+
+      const callResult = await sdk.eth.call([{
         to: safe.safeAddress,
         data: callData
-      }]);
-  
-      const EIP1271_MAGIC_VALUE = '0x1626ba7e';
-      const isValid = result === EIP1271_MAGIC_VALUE;
-      setIsValidSignature(isValid);
-  
+      }])
+
+      const isValid = callResult === EIP1271_MAGIC_VALUE
+
+      setResult({
+        originalMessage: message.trim(),
+        safeMessageHash,
+        safeTxHash,
+        isValid
+      })
+
     } catch (err) {
-      console.error('Signing/verification error:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      setError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
-  
-  const clearResults = () => {
-    setMessage('');
-    setSignature('');
-    setMessageHash('');
-    setRecoveredSigner('');
-    setIsValidSignature(null);
-    setError('');
-  };
+  }
+
+  const reset = () => {
+    setMessage('')
+    setResult(null)
+    setError('')
+  }
 
   return (
-    <div className="App">
-      <div className="app-header">
-        <h1>✅ Safe Message Signing</h1>
-        <p>EIP-712 message signing with EIP-1271 verification</p>
-      </div>
-
-      <div className="safe-status">
-        <div className="status-indicator connected">✅ Connected to Safe</div>
+    <div className="safe-app">
+      <div className="safe-app-header">
+        <h1>Message Signing</h1>
         <div className="safe-info">
-          <p><strong>Safe Address:</strong> <code>{safe.safeAddress}</code></p>
-          <p><strong>Chain ID:</strong> {safe.chainId}</p>
+          <span className="safe-address">{safe.safeAddress}</span>
+          <span className="chain-id">Chain {safe.chainId}</span>
         </div>
       </div>
 
-      {/* Debug Panel - Remove this in production */}
-      <div className="result-card" style={{ background: '#f8f9fa', borderColor: '#e9ecef', marginBottom: '20px' }}>
-        <h4>🔍 Connection Debug Info</h4>
-        <div style={{ marginTop: '12px' }}>
-          {debugInfo.map((log, index) => (
-            <div key={index} style={{ 
-              fontFamily: 'monospace', 
-              fontSize: '11px', 
-              padding: '2px 0',
-              color: '#495057'
-            }}>
-              {log}
-            </div>
-          ))}
+      <div className="safe-app-content">
+        <div className="input-section">
+          <label htmlFor="message-input">Message</label>
+          <textarea
+            id="message-input"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Enter your message to sign..."
+            rows={4}
+            disabled={loading}
+          />
         </div>
-      </div>
 
-      <div className="main-content">
-        <div className="tab-content">
-          <div className="input-group">
-            <label htmlFor="message">Message to Sign</label>
-            <textarea
-              id="message"
-              className="message-input"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Enter your message here..."
-              rows={4}
-            />
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
-            <button
-              className={`action-button ${loading ? 'disabled' : 'primary'}`}
-              onClick={handleSignAndVerify}
-              disabled={loading || !message.trim()}
-            >
-              {loading ? 'Processing...' : 'Sign & Verify'}
+        <div className="button-section">
+          <button
+            onClick={signAndVerify}
+            disabled={loading || !message.trim()}
+            className="primary-button"
+          >
+            {loading ? 'Signing & Verifying...' : 'Sign & Verify'}
+          </button>
+          
+          {(result || error) && (
+            <button onClick={reset} className="secondary-button">
+              Reset
             </button>
-            
-            {(signature || error) && (
-              <button
-                className="action-button"
-                onClick={clearResults}
-                style={{ background: '#6c757d', color: 'white' }}
-              >
-                Clear
-              </button>
-            )}
-          </div>
-
-          {error && (
-            <div className="result-card error">
-              <h4>❌ Error</h4>
-              <p>{error}</p>
-            </div>
           )}
+        </div>
 
-          {signature && (
-            <div className="result-card success">
-              <h4>📝 Signature Results</h4>
-              
-              <div className="result-details">
-                <p><strong>Original Message:</strong></p>
-                <code className="signature-code">{message}</code>
+        {error && (
+          <div className="error-card">
+            <h3>Error</h3>
+            <p>{error}</p>
+          </div>
+        )}
 
-                <p><strong>Message Hash:</strong></p>
-                <code className="signature-code">{messageHash}</code>
+        {result && (
+          <div className="result-card">
+            <h3>Signature Result</h3>
+            
+            <div className="result-item">
+              <label>Original Message</label>
+              <div className="code-block">{result.originalMessage}</div>
+            </div>
 
-                <p><strong>Signature:</strong></p>
-                <code className="signature-code">{signature}</code>
+            <div className="result-item">
+              <label>Safe Message Hash</label>
+              <div className="code-block">{result.safeMessageHash}</div>
+            </div>
 
-                <p><strong>Recovered Signer:</strong></p>
-                <code className="signature-code">{recoveredSigner}</code>
+            <div className="result-item">
+              <label>Safe Transaction Hash</label>
+              <div className="code-block">{result.safeTxHash}</div>
+            </div>
 
-                <p><strong>EIP-1271 Verification:</strong></p>
-                <div style={{ 
-                  padding: '12px', 
-                  borderRadius: '6px', 
-                  background: isValidSignature ? '#d4edda' : '#f8d7da',
-                  border: `1px solid ${isValidSignature ? '#c3e6cb' : '#f5c6cb'}`,
-                  marginTop: '8px'
-                }}>
-                  {isValidSignature === true && (
-                    <span style={{ color: '#155724', fontWeight: 'bold' }}>
-                      ✅ Valid - Signature verified on-chain
-                    </span>
-                  )}
-                  {isValidSignature === false && (
-                    <span style={{ color: '#721c24', fontWeight: 'bold' }}>
-                      ❌ Invalid - Signature failed on-chain verification
-                    </span>
-                  )}
-                  {isValidSignature === null && (
-                    <span style={{ color: '#856404', fontWeight: 'bold' }}>
-                      ⏳ Verifying...
-                    </span>
-                  )}
-                </div>
+            <div className="result-item">
+              <label>EIP-1271 Verification</label>
+              <div className={`verification-result ${result.isValid ? 'valid' : 'invalid'}`}>
+                {result.isValid ? '✅ Valid' : '❌ Invalid'}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
+
+      <div className="footer">
+        <p style={{ fontSize: '12px', textAlign: 'center', color: '#666', marginTop: '2rem' }}>
+          Built by <a href="https://numbergroup.xyz" target="_blank" rel="noreferrer">Zak Cole</a> —
+          <a href="https://github.com/zscole/safe-message-cli" target="_blank" rel="noreferrer">source</a>
+        </p>
       </div>
     </div>
-  );
+  )
 }
 
-export default App; 
+export default App 

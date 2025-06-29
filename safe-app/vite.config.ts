@@ -1,23 +1,22 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+// MIT License
+// © Zak Cole — https://numbergroup.xyz (@zscole)
 
-// https://vite.dev/config/
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
 export default defineConfig({
   plugins: [react()],
-  define: {
-    global: 'globalThis',
+  build: { sourcemap: false },
+  server: {
+    headers: {
+      'X-Frame-Options': 'SAMEORIGIN',
+      'Content-Security-Policy': "frame-ancestors 'self' https://app.safe.global https://*.safe.global"
+    }
   },
-  resolve: {
-    alias: {
-      process: "process/browser",
-      buffer: "buffer",
-      crypto: "crypto-browserify",
-      stream: "stream-browserify",
-      assert: "assert",
-      http: "stream-http",
-      https: "https-browserify",
-      os: "os-browserify",
-      url: "url",
-    },
-  },
-})
+  preview: {
+    headers: {
+      'X-Frame-Options': 'SAMEORIGIN',
+      'Content-Security-Policy': "frame-ancestors 'self' https://app.safe.global https://*.safe.global"
+    }
+  }
+});

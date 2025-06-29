@@ -1,9 +1,15 @@
 {
   "name": "Safe Message Tools",
+  "version": "1.0.0",
+  "id": "safe-message-app",
   "description": "EIP-712 message signing and EIP-1271 verification for Safe accounts",
   "iconPath": "logo.svg",
   "providedBy": {
-    "name": "Safe Message CLI",
-    "url": "https://github.com/zscole/safe-message-cli"
-  }
+    "name": "Zak Cole",
+    "url": "https://numbergroup.xyz"
+  },
+  "safeAppsPermissions": [
+    "camera",
+    "microphone"
+  ]
 } 

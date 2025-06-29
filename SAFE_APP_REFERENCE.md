@@ -4,11 +4,12 @@ This document captures everything learned from building a working Safe App with 
 
 ## ✅ Working Setup
 
-**Working URL:** https://safe-app-xi.vercel.app
+**Working URL:** https://safe-message-cli-git-main-zscoles-projects.vercel.app
 - HTTP 200 (no authentication issues)
 - Proper CORS headers
 - Correct iframe embedding policies
 - Safe SDK integration working
+- SecurityError issues resolved
 
 ## 🏗️ Architecture Overview
 
@@ -117,6 +118,84 @@ export default function App() {
 }
 ```
 
+## 🔥 Critical SecurityError Debugging
+
+### White Screen with SecurityError
+**Symptom:** App loads a white screen inside Safe with SecurityError in console:
+```
+SecurityError: Failed to read a named property 'origin' from 'Location': 
+Blocked a frame with origin "https://your-app.vercel.app" from accessing a cross-origin frame.
+```
+
+**Root Cause:** Attempting to access `window.parent.location.origin` or similar cross-origin properties from within Safe's iframe.
+
+**❌ Code That Breaks Safe Apps:**
+```tsx
+// NEVER DO THIS - causes SecurityError that breaks entire app
+console.log('Parent origin:', window.parent?.location?.origin)
+
+// Also breaks:
+const parentUrl = window.parent.location.href
+const parentHost = window.parent.location.host
+```
+
+**✅ Safe Cross-Origin Diagnostics:**
+```tsx
+// Safe environment detection without SecurityError
+console.log('🔗 Safe environment check:', {
+  currentOrigin: window.location.origin,          // ✅ Safe
+  inIframe: window !== window.parent,             // ✅ Safe  
+  userAgent: navigator.userAgent.includes('Safe'), // ✅ Safe
+  hasPostMessage: typeof window.postMessage === 'function', // ✅ Safe
+  hasParentPostMessage: typeof window.parent?.postMessage === 'function' // ✅ Safe
+})
+
+// Safe message handling with try-catch
+window.addEventListener('message', (event) => {
+  try {
+    console.log('📨 Message from parent:', {
+      origin: event.origin,  // ✅ Safe - from event object
+      data: event.data,
+      source: event.source === window.parent ? 'parent' : 'other'
+    })
+  } catch (error) {
+    console.log('⚠️ Message handling error (safe to ignore):', 
+                error instanceof Error ? error.message : String(error))
+  }
+})
+```
+
+**Key Rules:**
+- ❌ **Never access** `window.parent.location.*` properties
+- ❌ **Never access** `window.parent.document.*` properties  
+- ✅ **Always use** `event.origin` from message events instead
+- ✅ **Always wrap** risky operations in try-catch blocks
+- ✅ **Use** `window !== window.parent` to detect iframe context
+
+### SecurityError Prevention Patterns
+
+**❌ Dangerous:**
+```tsx
+// These ALL cause SecurityError in Safe iframes:
+window.parent.location.origin
+window.parent.location.href
+window.parent.document.title
+window.parent.history.length
+```
+
+**✅ Safe alternatives:**
+```tsx
+// Get parent info from message events:
+window.addEventListener('message', (event) => {
+  const parentOrigin = event.origin  // ✅ Safe
+  const parentData = event.data      // ✅ Safe
+})
+
+// Detect iframe context safely:
+const inIframe = window !== window.parent  // ✅ Safe
+const hasParent = window.parent !== null   // ✅ Safe
+```
+
 ## 🚨 Common Pitfalls
 
 ### 1. "The app doesn't support Safe App functionality"
@@ -195,13 +274,24 @@ vercel --prod  # Deploy to Vercel
 
 When Safe App fails to load:
 
-1. **Check browser console** for specific errors
-2. **Verify deployment headers** with `curl -I <your-url>`
-3. **Test iframe embedding** by checking `window.parent === window`
-4. **Check Safe SDK logs** for connection status
-5. **Verify manifest.json** is accessible at `/manifest.json`
+1. **Check for SecurityError first** - most common cause of white screen
+   - Look for `SecurityError: Failed to read a named property` in console
+   - Remove any `window.parent.location.*` access attempts
+   - Wrap diagnostics in try-catch blocks
+
+2. **Check browser console** for specific errors
+3. **Verify deployment headers** with `curl -I <your-url>`
+4. **Test iframe embedding** by checking `window.parent === window`
+5. **Check Safe SDK logs** for connection status
+6. **Verify manifest.json** is accessible at `/manifest.json`
 
 ### Common Error Messages
+
+**SecurityError: Failed to read a named property 'origin' from 'Location'**
+- **Symptom:** White screen, app won't load in Safe
+- **Fix:** Remove all `window.parent.location.*` access attempts
+- **Fix:** Wrap cross-origin operations in try-catch blocks
+- **Fix:** Use `event.origin` from message events instead
 
 **"The app doesn't support Safe App functionality"**
 - Remove React.StrictMode
@@ -284,7 +374,8 @@ const signMessage = async () => {
 
 ## 🔄 Known Working URLs
 
-- **Production:** https://safe-app-xi.vercel.app (confirmed working)
+- **Production:** https://safe-message-cli-git-main-zscoles-projects.vercel.app (confirmed working)
+- **Alternative:** https://safe-app-xi.vercel.app (confirmed working)
 - **CLI tools:** Available in `cli/` directory
 
 ## 📖 Additional Resources
@@ -320,12 +411,14 @@ const signMessage = async () => {
 
 ## ⚠️ Critical Rules
 
-1. **Never use React.StrictMode** with Safe Apps SDK
-2. **Always check deployment headers** before adding to Safe
-3. **Test locally first** before deploying
-4. **Use working URL as reference** for troubleshooting
-5. **Keep Safe SDK setup minimal** to avoid initialization issues
+1. **Never access window.parent.location properties** - causes SecurityError and white screen
+2. **Never use React.StrictMode** with Safe Apps SDK
+3. **Always wrap cross-origin operations in try-catch** to prevent app crashes
+4. **Always check deployment headers** before adding to Safe
+5. **Test locally first** before deploying
+6. **Use working URL as reference** for troubleshooting
+7. **Keep Safe SDK setup minimal** to avoid initialization issues
 
 ---
 
-*This reference was created after 6+ hours of troubleshooting. Follow these guidelines to avoid the same issues.* 
+*This reference was created after 8+ hours of troubleshooting Safe Apps SDK, React.StrictMode, deployment issues, and SecurityError debugging. Follow these guidelines to avoid the same issues.* 
