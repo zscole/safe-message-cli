@@ -1,6 +1,6 @@
 # Safe Tools
 
-The easiest way to sign and verify messages with your Gnosis Safe. Built for simple, reliable message signing without extra setup or painful workarounds.
+The easiest way to sign and verify messages with your Gnosis Safe. Built for simple, reliable message signing without extra setup or painful workarounds. Oh, and the name is `safe-message-cli` because I originally built it as a CLI utility and then expanded it to a web app, but didn't really want to separate all the logic. I'll clean it up later. 
 
 [![Live App](https://img.shields.io/badge/Live%20App-safe--tools-12ff80?style=flat-square)](https://safe-message-cli-git-main-zscoles-projects.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
