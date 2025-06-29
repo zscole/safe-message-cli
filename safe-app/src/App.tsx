@@ -76,7 +76,7 @@ function App() {
             
             <p className="description">
               Use it to prove ownership, generate verifiable signatures, or connect your Safe to offchain systems. 
-              Built for simple, reliable message signing—no extra setup, no workarounds.
+              Built for simple, reliable message signing without extra setup or painful workarounds.
             </p>
 
             <div className="features">
