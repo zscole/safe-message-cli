@@ -7,6 +7,8 @@ import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import { ethers } from 'ethers'
 import './App.css'
 
+// Official Safe contract that enables message signing for Safe accounts
+// Safe accounts can't sign messages natively, so this contract stores signed messages on-chain
 const SIGN_MESSAGE_LIB = '0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2'
 const EIP1271_MAGIC_VALUE = '0x1626ba7e'
 
