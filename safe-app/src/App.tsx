@@ -1,7 +1,7 @@
 // MIT License
 // © Zak Cole — https://numbergroup.xyz (@zscole)
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import { ethers } from 'ethers'
 import './App.css'
@@ -11,22 +11,49 @@ const EIP1271_MAGIC_VALUE = '0x1626ba7e'
 
 function App() {
   const { safe, sdk, connected } = useSafeAppsSDK()
-  const [currentView, setCurrentView] = useState<'sign' | 'verify'>('sign')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const [result, setResult] = useState<{
     originalMessage: string
     safeMessageHash: string
     safeTxHash: string
+    signerAddress: string
     isValid: boolean
   } | null>(null)
   const [error, setError] = useState('')
+  const [showAddressTooltip, setShowAddressTooltip] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (connected && textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [connected])
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea')
+      textArea.value = text
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+    }
+  }
+
+  const truncateAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`
+  }
 
   if (!connected) {
     return (
       <div className="safe-app">
         <div className="connecting-screen">
-          <h2>Message Signing</h2>
+          <h2>Safe Tools</h2>
           <p>Connecting to Safe...</p>
         </div>
       </div>
@@ -50,14 +77,12 @@ function App() {
     return ethers.TypedDataEncoder.hash(domain, types, value)
   }
 
-  const signAndVerify = async () => {
-    if (!message.trim()) {
-      setError('Please enter a message')
-      return
-    }
+  const signMessage = async () => {
+    if (!message.trim()) return
 
     setLoading(true)
     setError('')
+    setSuccess(false)
     setResult(null)
 
     try {
@@ -120,11 +145,14 @@ function App() {
         originalMessage: message.trim(),
         safeMessageHash,
         safeTxHash,
+        signerAddress: safe.safeAddress,
         isValid
       })
 
+      setSuccess(true)
+
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      setError(err instanceof Error ? err.message : 'Unknown error occurred')
     } finally {
       setLoading(false)
     }
@@ -134,138 +162,218 @@ function App() {
     setMessage('')
     setResult(null)
     setError('')
+    setSuccess(false)
+    if (textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }
+
+  const getNetworkName = (chainId: number) => {
+    const networks: Record<number, string> = {
+      1: 'Ethereum Mainnet',
+      11155111: 'Sepolia Testnet',
+      5: 'Goerli Testnet',
+      137: 'Polygon Mainnet',
+      10: 'Optimism Mainnet',
+      42161: 'Arbitrum One'
+    }
+    return networks[chainId] || `Chain ${chainId}`
   }
 
   return (
     <div className="safe-app">
       <div className="safe-app-header">
-        <div className="safe-app-title">Message Signing</div>
+        <div className="header-content">
+          <h1 className="safe-app-title">Safe Tools</h1>
+          <p className="safe-app-description">
+            Sign and verify messages using your Gnosis Safe. Useful for proving Safe ownership or interacting with offchain services.
+          </p>
+        </div>
         <div className="safe-info">
           <div className="safe-address-container">
             <span className="safe-address-label">Safe Address</span>
-            <span className="safe-address">{safe.safeAddress}</span>
+            <div className="safe-address-row">
+              <span 
+                className="safe-address"
+                onMouseEnter={() => setShowAddressTooltip(true)}
+                onMouseLeave={() => setShowAddressTooltip(false)}
+              >
+                {truncateAddress(safe.safeAddress)}
+              </span>
+              <button 
+                className="copy-button"
+                onClick={() => copyToClipboard(safe.safeAddress)}
+                title="Copy address"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+              {showAddressTooltip && (
+                <div className="address-tooltip">
+                  {safe.safeAddress}
+                </div>
+              )}
+            </div>
           </div>
           <div className="chain-info-container">
             <span className="chain-label">Network</span>
             <span className="chain-id">
-              {safe.chainId === 1 ? 'Ethereum Mainnet' : 
-               safe.chainId === 11155111 ? 'Sepolia Testnet' :
-               safe.chainId === 5 ? 'Goerli Testnet' :
-               safe.chainId === 137 ? 'Polygon Mainnet' :
-               safe.chainId === 10 ? 'Optimism Mainnet' :
-               safe.chainId === 42161 ? 'Arbitrum One' :
-               `Chain ${safe.chainId}`}
+              {getNetworkName(safe.chainId)}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="action-buttons">
-        <button 
-          className={`action-button ${currentView === 'sign' ? 'active' : ''}`}
-          onClick={() => setCurrentView('sign')}
-        >
-          Sign
-        </button>
-        <button 
-          className={`action-button ${currentView === 'verify' ? 'active' : ''}`}
-          onClick={() => setCurrentView('verify')}
-        >
-          Verify
-        </button>
-      </div>
-
-      {result && (
-        <div className="pending-section">
-          <div className="pending-title">Recent Messages</div>
-          <div className="pending-message">
-            <span className="message-text">"{result.originalMessage}"</span>
-            <span className="signature-status">
-              {result.isValid ? '✅ Verified' : '❌ Invalid'}
-            </span>
-          </div>
+      <div className="main-content">
+        <div className="helper-text">
+          This tool signs messages using your connected Safe.
         </div>
-      )}
 
-      {currentView === 'sign' && (
-        <>
-          <div className="input-section">
-            <label htmlFor="message-input">Message</label>
-            <textarea
-              id="message-input"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Enter your message to sign..."
-              rows={4}
-              disabled={loading}
-            />
-          </div>
+        <div className="input-section">
+          <label htmlFor="message-input">Message</label>
+          <textarea
+            ref={textareaRef}
+            id="message-input"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Enter your message to sign..."
+            rows={3}
+            disabled={loading}
+            className="message-input"
+          />
+        </div>
 
-          <div className="button-section">
-            <button
-              onClick={signAndVerify}
-              disabled={loading || !message.trim()}
-              className="primary-button"
-            >
-              {loading ? 'Signing & Verifying...' : 'Sign & Verify'}
-            </button>
-            
-            {(result || error) && (
-              <button onClick={reset} className="secondary-button">
-                Reset
-              </button>
+        <div className="button-section">
+          <button
+            onClick={signMessage}
+            disabled={loading || !message.trim()}
+            className={`primary-button ${loading ? 'loading' : ''} ${success ? 'success' : ''} ${error ? 'error' : ''}`}
+          >
+            {loading ? (
+              <>
+                <span className="loading-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+                Signing...
+              </>
+            ) : success ? (
+              <>
+                <span className="success-icon">✓</span>
+                Signed
+              </>
+            ) : (
+              'Sign Message'
             )}
-          </div>
-        </>
-      )}
-
-      {currentView === 'verify' && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#636669' }}>
-          <p>Verification functionality coming soon...</p>
-          <p>For now, use the Sign tab to sign and verify messages.</p>
-        </div>
-      )}
-
-      {error && (
-        <div className="error-card">
-          <h3>Error</h3>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {result && (
-        <div className="result-card">
-          <h3>Signature Result</h3>
+          </button>
           
-          <div className="result-item">
-            <label>Original Message</label>
-            <div className="code-block">{result.originalMessage}</div>
-          </div>
+          {(result || error) && (
+            <button onClick={reset} className="secondary-button">
+              New Message
+            </button>
+          )}
+        </div>
 
-          <div className="result-item">
-            <label>Safe Message Hash</label>
-            <div className="code-block">{result.safeMessageHash}</div>
+        {error && (
+          <div className="error-card">
+            <h3>Error</h3>
+            <p>{error}</p>
           </div>
+        )}
 
-          <div className="result-item">
-            <label>Safe Transaction Hash</label>
-            <div className="code-block">{result.safeTxHash}</div>
-          </div>
+        {result && (
+          <div className="result-card">
+            <h3>Signature Result</h3>
+            
+            <div className="result-item">
+              <label>Message</label>
+              <div className="result-content">
+                <div className="result-text">{result.originalMessage}</div>
+                <button 
+                  className="copy-button"
+                  onClick={() => copyToClipboard(result.originalMessage)}
+                  title="Copy message"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
 
-          <div className="result-item">
-            <label>EIP-1271 Verification</label>
-            <div className={`verification-result ${result.isValid ? 'valid' : 'invalid'}`}>
-              {result.isValid ? '✅ Valid' : '❌ Invalid'}
+            <div className="result-item">
+              <label>Signer Address</label>
+              <div className="result-content">
+                <div className="code-block">{result.signerAddress}</div>
+                <button 
+                  className="copy-button"
+                  onClick={() => copyToClipboard(result.signerAddress)}
+                  title="Copy signer address"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="result-item">
+              <label>Message Hash</label>
+              <div className="result-content">
+                <div className="code-block">{result.safeMessageHash}</div>
+                <button 
+                  className="copy-button"
+                  onClick={() => copyToClipboard(result.safeMessageHash)}
+                  title="Copy message hash"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="result-item">
+              <label>Transaction Hash</label>
+              <div className="result-content">
+                <div className="code-block">{result.safeTxHash}</div>
+                <button 
+                  className="copy-button"
+                  onClick={() => copyToClipboard(result.safeTxHash)}
+                  title="Copy transaction hash"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="result-item">
+              <label>EIP-1271 Verification</label>
+              <div className={`verification-result ${result.isValid ? 'valid' : 'invalid'}`}>
+                {result.isValid ? 'Valid' : 'Invalid'}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="footer">
-        <p style={{ fontSize: '12px', color: '#666' }}>
-          Built by <a href="https://numbergroup.xyz" target="_blank" rel="noreferrer">Zak Cole</a> —
-          <a href="https://github.com/zscole/safe-message-cli" target="_blank" rel="noreferrer">source</a>
-        </p>
+        <div className="footer-links">
+          <a href="https://x.com/0xzak" target="_blank" rel="noreferrer">Zak Cole</a>
+          <span className="separator">·</span>
+          <a href="https://numbergroup.xyz" target="_blank" rel="noreferrer">Number Group</a>
+          <span className="separator">·</span>
+          <a href="https://github.com/zscole/safe-message-cli" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
       </div>
     </div>
   )
