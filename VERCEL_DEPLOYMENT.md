@@ -200,6 +200,7 @@ railway up
 - **URL:** https://safe-message-cli-git-main-zscoles-projects.vercel.app
 - **Status:** Working without authentication issues
 - **Strategy:** Deployed to existing project, not new deployment
+- **Working Commit:** `b2a69d80dfc83b038312fdde56eb8a7daee9a63d` (final clean version)
 
 ## 📝 Best Practices
 

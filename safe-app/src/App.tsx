@@ -11,6 +11,7 @@ const EIP1271_MAGIC_VALUE = '0x1626ba7e'
 
 function App() {
   const { safe, sdk, connected } = useSafeAppsSDK()
+  const [currentView, setCurrentView] = useState<'sign' | 'verify'>('sign')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{
@@ -23,9 +24,11 @@ function App() {
 
   if (!connected) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <h2>Connecting to Safe...</h2>
-        <p>Please wait while we establish connection with your Safe.</p>
+      <div className="safe-app">
+        <div className="connecting-screen">
+          <h2>Message Signing</h2>
+          <p>Connecting to Safe...</p>
+        </div>
       </div>
     )
   }
@@ -136,7 +139,7 @@ function App() {
   return (
     <div className="safe-app">
       <div className="safe-app-header">
-        <h1>Message Signing</h1>
+        <div className="safe-app-title">Message Signing</div>
         <div className="safe-info">
           <div className="safe-address-container">
             <span className="safe-address-label">Safe Address</span>
@@ -157,73 +160,109 @@ function App() {
         </div>
       </div>
 
-      <div className="safe-app-content">
-        <div className="input-section">
-          <label htmlFor="message-input">Message</label>
-          <textarea
-            id="message-input"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Enter your message to sign..."
-            rows={4}
-            disabled={loading}
-          />
-        </div>
-
-        <div className="button-section">
-          <button
-            onClick={signAndVerify}
-            disabled={loading || !message.trim()}
-            className="primary-button"
-          >
-            {loading ? 'Signing & Verifying...' : 'Sign & Verify'}
-          </button>
-          
-          {(result || error) && (
-            <button onClick={reset} className="secondary-button">
-              Reset
-            </button>
-          )}
-        </div>
-
-        {error && (
-          <div className="error-card">
-            <h3>Error</h3>
-            <p>{error}</p>
-          </div>
-        )}
-
-        {result && (
-          <div className="result-card">
-            <h3>Signature Result</h3>
-            
-            <div className="result-item">
-              <label>Original Message</label>
-              <div className="code-block">{result.originalMessage}</div>
-            </div>
-
-            <div className="result-item">
-              <label>Safe Message Hash</label>
-              <div className="code-block">{result.safeMessageHash}</div>
-            </div>
-
-            <div className="result-item">
-              <label>Safe Transaction Hash</label>
-              <div className="code-block">{result.safeTxHash}</div>
-            </div>
-
-            <div className="result-item">
-              <label>EIP-1271 Verification</label>
-              <div className={`verification-result ${result.isValid ? 'valid' : 'invalid'}`}>
-                {result.isValid ? '✅ Valid' : '❌ Invalid'}
-              </div>
-            </div>
-          </div>
-        )}
+      <div className="action-buttons">
+        <button 
+          className={`action-button ${currentView === 'sign' ? 'active' : ''}`}
+          onClick={() => setCurrentView('sign')}
+        >
+          Sign
+        </button>
+        <button 
+          className={`action-button ${currentView === 'verify' ? 'active' : ''}`}
+          onClick={() => setCurrentView('verify')}
+        >
+          Verify
+        </button>
       </div>
 
+      {result && (
+        <div className="pending-section">
+          <div className="pending-title">Recent Messages</div>
+          <div className="pending-message">
+            <span className="message-text">"{result.originalMessage}"</span>
+            <span className="signature-status">
+              {result.isValid ? '✅ Verified' : '❌ Invalid'}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {currentView === 'sign' && (
+        <>
+          <div className="input-section">
+            <label htmlFor="message-input">Message</label>
+            <textarea
+              id="message-input"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Enter your message to sign..."
+              rows={4}
+              disabled={loading}
+            />
+          </div>
+
+          <div className="button-section">
+            <button
+              onClick={signAndVerify}
+              disabled={loading || !message.trim()}
+              className="primary-button"
+            >
+              {loading ? 'Signing & Verifying...' : 'Sign & Verify'}
+            </button>
+            
+            {(result || error) && (
+              <button onClick={reset} className="secondary-button">
+                Reset
+              </button>
+            )}
+          </div>
+        </>
+      )}
+
+      {currentView === 'verify' && (
+        <div style={{ textAlign: 'center', padding: '40px', color: '#636669' }}>
+          <p>Verification functionality coming soon...</p>
+          <p>For now, use the Sign tab to sign and verify messages.</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="error-card">
+          <h3>Error</h3>
+          <p>{error}</p>
+        </div>
+      )}
+
+      {result && (
+        <div className="result-card">
+          <h3>Signature Result</h3>
+          
+          <div className="result-item">
+            <label>Original Message</label>
+            <div className="code-block">{result.originalMessage}</div>
+          </div>
+
+          <div className="result-item">
+            <label>Safe Message Hash</label>
+            <div className="code-block">{result.safeMessageHash}</div>
+          </div>
+
+          <div className="result-item">
+            <label>Safe Transaction Hash</label>
+            <div className="code-block">{result.safeTxHash}</div>
+          </div>
+
+          <div className="result-item">
+            <label>EIP-1271 Verification</label>
+            <div className={`verification-result ${result.isValid ? 'valid' : 'invalid'}`}>
+              {result.isValid ? '✅ Valid' : '❌ Invalid'}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="footer">
-        <p style={{ fontSize: '12px', textAlign: 'center', color: '#666', marginTop: '2rem' }}>
+        <p style={{ fontSize: '12px', color: '#666' }}>
           Built by <a href="https://numbergroup.xyz" target="_blank" rel="noreferrer">Zak Cole</a> —
           <a href="https://github.com/zscole/safe-message-cli" target="_blank" rel="noreferrer">source</a>
         </p>

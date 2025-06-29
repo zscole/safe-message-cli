@@ -378,6 +378,15 @@ const signMessage = async () => {
 - **Alternative:** https://safe-app-xi.vercel.app (confirmed working)
 - **CLI tools:** Available in `cli/` directory
 
+## 📌 Working Commit Reference
+
+**Final Clean Working Version:** `b2a69d80dfc83b038312fdde56eb8a7daee9a63d`
+- All functionality working (Safe App + CLI tools)
+- SecurityError fixes applied
+- Developer experience optimizations complete
+- Repository cleaned of artifacts
+- Comprehensive documentation included
+
 ## 📖 Additional Resources
 
 - [Safe Apps SDK Documentation](https://docs.safe.global/sdk/safe-apps)

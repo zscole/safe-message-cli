@@ -60,6 +60,8 @@ Both use the same EIP-712 domain separation for message compatibility.
 
 **Working Safe App:** https://safe-message-cli-git-main-zscoles-projects.vercel.app
 
+**Working Commit:** `b2a69d80dfc83b038312fdde56eb8a7daee9a63d` (final clean version)
+
 For deployment instructions and troubleshooting Vercel authentication issues, see [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md).
 
 ## Standards

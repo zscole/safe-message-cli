@@ -23,29 +23,24 @@ body {
 .safe-app {
   width: 100%;
   max-width: 800px;
-  min-height: 80vh;
   background: white;
-  display: flex;
-  flex-direction: column;
   border: 3px solid #12ff80;
   border-radius: 16px;
+  padding: 32px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
 }
 
 .safe-app-header {
-  padding: 24px 32px;
-  border-bottom: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 32px;
 }
 
-.safe-app-header h1 {
+.safe-app-title {
   font-size: 24px;
   font-weight: 700;
   color: #121312;
-  margin: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -90,24 +85,76 @@ body {
   color: #121312;
 }
 
-.safe-app-content {
-  flex: 1;
-  padding: 32px;
+.action-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
-.input-section {
+.action-button {
+  flex: 1;
+  background: white;
+  border: 2px solid #121312;
+  border-radius: 8px;
+  color: #121312;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 16px 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-button:hover {
+  background: #f0f0f0;
+}
+
+.action-button.active {
+  background: #12ff80;
+  border-color: #12ff80;
+}
+
+.pending-section {
+  margin-bottom: 32px;
+}
+
+.pending-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #121312;
+  margin-bottom: 16px;
+}
+
+.pending-message {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.message-text {
+  font-size: 16px;
+  color: #121312;
+}
+
+.signature-status {
+  font-size: 14px;
+  color: #636669;
+  font-weight: 500;
+}
+.input-section {
+  margin-bottom: 24px;
 }
 
 .input-section label {
   font-size: 16px;
   font-weight: 600;
   color: #121312;
+  margin-bottom: 8px;
+  display: block;
 }
 
 .input-section textarea {
@@ -138,6 +185,7 @@ body {
   display: flex;
   gap: 12px;
   align-items: center;
+  margin-bottom: 24px;
 }
 
 .primary-button {
@@ -186,6 +234,7 @@ body {
   border: 2px solid #ffcdd2;
   border-radius: 12px;
   padding: 20px;
+  margin-bottom: 20px;
 }
 
 .error-card h3 {
@@ -264,9 +313,9 @@ body {
 }
 
 .footer {
-  padding: 24px 32px;
+  margin-top: 32px;
+  padding-top: 20px;
   border-top: 1px solid #e2e8f0;
-  margin-top: auto;
   text-align: center;
 }
 
@@ -280,22 +329,36 @@ body {
   text-decoration: underline;
 }
 
+.connecting-screen {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.connecting-screen h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #121312;
+}
+
+.connecting-screen p {
+  font-size: 16px;
+  color: #636669;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   body {
     padding: 10px;
-    align-items: flex-start;
   }
 
   .safe-app {
-    min-height: 90vh;
+    padding: 20px;
   }
 
   .safe-app-header {
     flex-direction: column;
     gap: 16px;
-    align-items: flex-start;
-    padding: 20px;
+    align-items: center;
   }
 
   .safe-info {
@@ -307,12 +370,12 @@ body {
     align-items: flex-start;
   }
 
-  .safe-app-header h1 {
+  .safe-app-title {
     font-size: 20px;
   }
 
-  .safe-app-content {
-    padding: 20px;
+  .action-buttons {
+    flex-direction: column;
   }
 
   .button-section {
