@@ -10,12 +10,34 @@ const EIP1271_ABI = ['function isValidSignature(bytes32,bytes) view returns (byt
 const EIP1271_MAGIC = '0x1626ba7e'
 
 const cli = yargs(hideBin(process.argv))
-  .option('safe', { type: 'string', required: true, desc: 'Safe address' })
-  .option('sig', { type: 'string', required: true, desc: 'Signature' })
-  .option('msg', { type: 'string', required: true, desc: 'Message file' })
-  .option('rpc', { type: 'string', required: true, desc: 'RPC URL' })
-  .option('signer', { type: 'string', desc: 'Expected signer' })
-  .option('onchain', { type: 'boolean', desc: 'Use EIP-1271' })
+  .option('safe', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Safe address' 
+  })
+  .option('sig', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Signature to verify' 
+  })
+  .option('msg', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Message file path' 
+  })
+  .option('rpc', { 
+    type: 'string', 
+    required: true, 
+    describe: 'RPC endpoint URL' 
+  })
+  .option('signer', { 
+    type: 'string', 
+    describe: 'Expected signer address' 
+  })
+  .option('onchain', { 
+    type: 'boolean', 
+    describe: 'Use EIP-1271 verification' 
+  })
   .help()
   .argv
 

@@ -1,7 +1,7 @@
 {
   "name": "safe-message-tools",
   "version": "1.0.0",
-  "description": "Safe App for message signing and verification with CLI automation tools",
+  "description": "Safe message signing with CLI tools and web interface",
   "type": "module",
   "bin": {
     "safe-sign": "./cli/sign.js",
@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "cd safe-app && npm run dev",
     "build": "cd safe-app && npm install && npm run build",
-    "setup": "npm install && cd safe-app && npm install --legacy-peer-deps",
+    "install-all": "npm install && cd safe-app && npm install",
     "test": "echo 'no tests' && exit 0"
   },
   "keywords": [

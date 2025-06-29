@@ -7,13 +7,38 @@ import { hideBin } from 'yargs/helpers'
 import { safeTypedData, safeMessageHash } from '../lib/safe.js'
 
 const cli = yargs(hideBin(process.argv))
-  .option('safe', { type: 'string', required: true, desc: 'Safe address' })
-  .option('msg', { type: 'string', required: true, desc: 'Message file' })
-  .option('rpc', { type: 'string', required: true, desc: 'RPC URL' })
-  .option('sig', { type: 'string', desc: 'Signature to add' })
-  .option('signer', { type: 'string', desc: 'Signer address (required with --sig)' })
-  .option('output', { type: 'string', default: 'signatures.json', desc: 'Output file' })
-  .option('verify', { type: 'boolean', desc: 'Verify signatures' })
+  .option('safe', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Safe address' 
+  })
+  .option('msg', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Message file path' 
+  })
+  .option('rpc', { 
+    type: 'string', 
+    required: true, 
+    describe: 'RPC endpoint URL' 
+  })
+  .option('sig', { 
+    type: 'string', 
+    describe: 'Signature to add' 
+  })
+  .option('signer', { 
+    type: 'string', 
+    describe: 'Signer address (required with --sig)' 
+  })
+  .option('output', { 
+    type: 'string', 
+    default: 'signatures.json', 
+    describe: 'Output file path' 
+  })
+  .option('verify', { 
+    type: 'boolean', 
+    describe: 'Verify all signatures' 
+  })
   .help()
   .argv
 

@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Safe App for EIP-712 message signing and EIP-1271 verification",
+  "description": "Safe App for message signing and EIP-1271 verification",
   "homepage": ".",
   "author": "Zak Cole <zak@numbergroup.xyz> (https://numbergroup.xyz)",
   "license": "MIT",

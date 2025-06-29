@@ -7,10 +7,26 @@ import { hideBin } from 'yargs/helpers'
 import { safeTypedData, safeMessageHash } from '../lib/safe.js'
 
 const cli = yargs(hideBin(process.argv))
-  .option('safe', { type: 'string', required: true, desc: 'Safe address' })
-  .option('key', { type: 'string', required: true, desc: 'Private key' })
-  .option('msg', { type: 'string', required: true, desc: 'Message file' })
-  .option('rpc', { type: 'string', required: true, desc: 'RPC URL' })
+  .option('safe', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Safe address' 
+  })
+  .option('key', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Private key to sign with' 
+  })
+  .option('msg', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Message file path' 
+  })
+  .option('rpc', { 
+    type: 'string', 
+    required: true, 
+    describe: 'RPC endpoint URL' 
+  })
   .help()
   .argv
 

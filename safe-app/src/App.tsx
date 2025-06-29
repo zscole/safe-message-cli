@@ -10,71 +10,7 @@ const SIGN_MESSAGE_LIB = '0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2'
 const EIP1271_MAGIC_VALUE = '0x1626ba7e'
 
 function App() {
-  console.log('🎯 App component rendering...')
-  
   const { safe, sdk, connected } = useSafeAppsSDK()
-  
-  // CRITICAL: Log the exact handshake state (with safe cross-origin handling)
-  console.log('[Safe SDK Debug - CRITICAL]', {
-    iframe: window.parent !== window,
-    connected,
-    safe: safe || 'NULL',
-    sdk: sdk || 'NULL',
-    hasGlobalSafe: typeof window !== 'undefined' && (window as any).Safe,
-    currentURL: window.location.href
-  })
-  
-  console.log('🔗 Safe SDK detailed state:', { 
-    connected, 
-    safeAddress: safe?.safeAddress, 
-    chainId: safe?.chainId,
-    sdkVersion: sdk ? 'SDK loaded' : 'SDK not loaded',
-    sdkMethods: sdk ? Object.keys(sdk) : 'no SDK',
-    safeObject: safe ? Object.keys(safe) : 'no safe object'
-  })
-
-  // Test SDK functionality
-  React.useEffect(() => {
-    console.log('🔄 useEffect triggered with SDK state:', { connected, sdk: !!sdk, safe: !!safe })
-    
-    if (sdk) {
-      console.log('✅ SDK is available, testing methods...')
-      console.log('📋 SDK methods available:', Object.keys(sdk))
-      
-      // Test basic SDK functionality
-      if (sdk.safe) {
-        console.log('🔐 SDK.safe methods:', Object.keys(sdk.safe))
-      }
-      if (sdk.txs) {
-        console.log('📝 SDK.txs methods:', Object.keys(sdk.txs))
-      }
-      
-      // If not connected, try to manually trigger Safe detection
-      if (!connected) {
-        console.log('🔄 SDK loaded but not connected, attempting manual detection...')
-        
-        // Sometimes Safe needs a moment to establish connection
-        setTimeout(() => {
-          console.log('⏰ Delayed check - SDK state:', { 
-            connected, 
-            safe: !!safe, 
-            safeAddress: safe?.safeAddress 
-          })
-        }, 1000)
-        
-        setTimeout(() => {
-          console.log('⏰ Final check - SDK state:', { 
-            connected, 
-            safe: !!safe, 
-            safeAddress: safe?.safeAddress 
-          })
-        }, 3000)
-      }
-    } else {
-      console.log('❌ SDK not available in useEffect')
-    }
-  }, [sdk, connected, safe])
-  
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<{
@@ -85,25 +21,15 @@ function App() {
   } | null>(null)
   const [error, setError] = useState('')
 
-  console.log('📱 App state:', { connected, loading, hasResult: !!result, hasError: !!error })
-
   if (!connected) {
-    console.log('❌ Not connected to Safe - showing loading state')
-    return <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h2>Connecting to Safe...</h2>
-      <p>Please wait while we establish connection with your Safe.</p>
-      <div style={{ marginTop: '20px', fontSize: '12px', color: '#666' }}>
-        <p>Debug info:</p>
-        <p>SDK: {sdk ? '✅ Loaded' : '❌ Not loaded'}</p>
-        <p>Safe: {safe ? '✅ Available' : '❌ Not available'}</p>
-        <p>Connected: {connected ? '✅ Yes' : '❌ No'}</p>
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h2>Connecting to Safe...</h2>
+        <p>Please wait while we establish connection with your Safe.</p>
       </div>
-    </div>
+    )
   }
 
-  console.log('✅ Connected to Safe - rendering main app')
-
-  // Compute Safe EIP-712 message hash
   const getSafeMessageHash = (message: string) => {
     const domain = {
       chainId: safe.chainId,
@@ -132,10 +58,8 @@ function App() {
     setResult(null)
 
     try {
-      // Convert message to bytes for SignMessageLib
       const messageBytes = ethers.toUtf8Bytes(message.trim())
 
-      // Create SignMessageLib transaction - uses bytes memory, not bytes32
       const signMessageInterface = new ethers.Interface([
         'function signMessage(bytes _data)'
       ])
@@ -149,7 +73,6 @@ function App() {
         operation: 1 // DelegateCall
       }
 
-      // Send transaction
       const { safeTxHash } = await sdk.txs.send({ txs: [transaction] })
 
       // Poll for execution
@@ -171,10 +94,9 @@ function App() {
         throw new Error('Transaction not executed within timeout')
       }
 
-      // Get the Safe message hash that was stored by SignMessageLib
       const safeMessageHash = getSafeMessageHash(message.trim())
 
-      // Verify signature using EIP-1271 with the Safe message hash
+      // Verify using EIP-1271
       const isValidSigInterface = new ethers.Interface([
         'function isValidSignature(bytes32 _hash, bytes _signature) external view returns (bytes4)'
       ])

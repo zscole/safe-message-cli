@@ -15,16 +15,53 @@ const SAFE_ABI = [
 ]
 
 const cli = yargs(hideBin(process.argv))
-  .option('safe', { type: 'string', required: true, desc: 'Safe address' })
-  .option('to', { type: 'string', required: true, desc: 'Recipient' })
-  .option('value', { type: 'string', default: '0', desc: 'ETH value (wei)' })
-  .option('data', { type: 'string', default: '0x', desc: 'Call data' })
-  .option('operation', { type: 'number', default: 0, desc: 'Operation (0=call, 1=delegatecall)' })
-  .option('rpc', { type: 'string', required: true, desc: 'RPC URL' })
-  .option('key', { type: 'string', desc: 'Private key to sign' })
-  .option('output', { type: 'string', default: 'transaction.json', desc: 'Output file' })
-  .option('execute', { type: 'boolean', desc: 'Execute transaction' })
-  .option('executor-key', { type: 'string', desc: 'Executor private key' })
+  .option('safe', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Safe address' 
+  })
+  .option('to', { 
+    type: 'string', 
+    required: true, 
+    describe: 'Recipient address' 
+  })
+  .option('value', { 
+    type: 'string', 
+    default: '0', 
+    describe: 'ETH value in wei' 
+  })
+  .option('data', { 
+    type: 'string', 
+    default: '0x', 
+    describe: 'Transaction data' 
+  })
+  .option('operation', { 
+    type: 'number', 
+    default: 0, 
+    describe: 'Operation type (0=call, 1=delegatecall)' 
+  })
+  .option('rpc', { 
+    type: 'string', 
+    required: true, 
+    describe: 'RPC endpoint URL' 
+  })
+  .option('key', { 
+    type: 'string', 
+    describe: 'Private key to sign with' 
+  })
+  .option('output', { 
+    type: 'string', 
+    default: 'transaction.json', 
+    describe: 'Output file path' 
+  })
+  .option('execute', { 
+    type: 'boolean', 
+    describe: 'Execute the transaction' 
+  })
+  .option('executor-key', { 
+    type: 'string', 
+    describe: 'Executor private key' 
+  })
   .help()
   .argv
 
