@@ -98,60 +98,71 @@ function App() {
       setError('Please enter a message to sign');
       return;
     }
-
+  
     setLoading(true);
     setError('');
     setSignature('');
     setMessageHash('');
     setRecoveredSigner('');
     setIsValidSignature(null);
-
+  
     try {
-      // 1. Hash the message using ethers (for EIP-191 personal message)
+      // Hash the message using ethers (EIP-191 personal message)
       const msgHash = ethers.hashMessage(message);
       setMessageHash(msgHash);
-
-      // 2. Create transaction to SignMessageLib for on-chain signing
+  
+      // SignMessageLib contract and function ABI
       const SIGN_MESSAGE_LIB = '0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2';
       const signMessageInterface = new ethers.Interface([
         'function signMessage(bytes _data)'
       ]);
-
       const signMessageData = signMessageInterface.encodeFunctionData('signMessage', [msgHash]);
-
+  
+      // DelegateCall transaction via Safe SDK
       const transaction = {
         to: SIGN_MESSAGE_LIB,
         value: '0',
         data: signMessageData,
         operation: 1 // DelegateCall
       };
-
-      // 3. Send transaction to sign the message on-chain
+  
       const txResponse = await sdk.txs.send({ txs: [transaction] });
-      setSignature(`Signed on-chain: ${txResponse.safeTxHash}`);
+      const safeTxHash = txResponse.safeTxHash;
+      setSignature(`Signed on-chain: ${safeTxHash}`);
       setRecoveredSigner(safe.safeAddress);
-
-      // 4. Call isValidSignature on the Safe contract
+  
+      // ⏳ Wait for execution by polling the transaction service
+      let isExecuted = false;
+      let retry = 0;
+      while (!isExecuted && retry < 30) {
+        const txDetails = await sdk.txs.getBySafeTxHash(safeTxHash);
+        if (txDetails?.executedAt) {
+          isExecuted = true;
+          break;
+        }
+        await new Promise((res) => setTimeout(res, 3000));
+        retry++;
+      }
+  
+      if (!isExecuted) {
+        throw new Error('Signature transaction was not executed in time. Try again.');
+      }
+  
+      // EIP-1271 verification
       const isValidSigInterface = new ethers.Interface([
         'function isValidSignature(bytes32 _hash, bytes _signature) external view returns (bytes4)'
       ]);
-
-      // For on-chain signed messages, we check with empty signature since it's stored on-chain
-      const callData = isValidSigInterface.encodeFunctionData('isValidSignature', [
-        msgHash,
-        '0x' // Empty signature for on-chain signed messages
-      ]);
-
+      const callData = isValidSigInterface.encodeFunctionData('isValidSignature', [msgHash, '0x']);
+  
       const result = await sdk.eth.call([{
         to: safe.safeAddress,
         data: callData
       }]);
-
-      // Check if result matches EIP-1271 magic value
+  
       const EIP1271_MAGIC_VALUE = '0x1626ba7e';
       const isValid = result === EIP1271_MAGIC_VALUE;
       setIsValidSignature(isValid);
-
+  
     } catch (err) {
       console.error('Signing/verification error:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
@@ -159,7 +170,7 @@ function App() {
       setLoading(false);
     }
   };
-
+  
   const clearResults = () => {
     setMessage('');
     setSignature('');
