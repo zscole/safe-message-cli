@@ -194,7 +194,7 @@ body {
   line-height: 1.5;
   resize: vertical;
   transition: border-color 0.15s ease;
-  color: #0f172a;
+  color: #12ff80;
 }
 
 .message-input::placeholder {

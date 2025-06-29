@@ -63,9 +63,10 @@ safe-collect --safe 0x... --message "Hello World" --rpc https://... --sig 0x... 
 Safe Tools uses the official Safe SignMessageLib contract and EIP-1271 standard:
 
 1. **EIP-712 hashing**: Messages are hashed using Safe's domain separator
-2. **On-chain signing**: Creates a transaction to the SignMessageLib contract  
-3. **EIP-1271 verification**: Automatically verifies signature validity
-4. **Standard compliance**: Works with any service that supports EIP-1271
+2. **Onchain signing**: Creates a transaction to the SignMessageLib contract  
+3. **Multi-signature support**: Respects Safe threshold requirements (e.g., 2/3, 3/5)
+4. **EIP-1271 verification**: Automatically verifies signature validity
+5. **Standard compliance**: Works with any service that supports EIP-1271
 
 ## 🔧 Development
 
@@ -107,7 +108,7 @@ npm install -g .
 ## 📋 Standards
 
 - **EIP-712**: Typed data signing with Safe domain separation
-- **EIP-1271**: On-chain signature verification standard
+- **EIP-1271**: Onchain signature verification standard
 - **Safe Apps SDK**: Official integration with Safe interface
 - **Browser compatible**: No Node.js dependencies in web interface
 

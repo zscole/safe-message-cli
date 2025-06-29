@@ -9,7 +9,7 @@ import Safe from '@safe-global/protocol-kit'
 import './App.css'
 
 // Official Safe contract that enables message signing for Safe accounts
-// Safe accounts can't sign messages natively, so this contract stores signed messages on-chain
+// Safe accounts can't sign messages natively, so this contract stores signed messages onchain
 const SIGN_MESSAGE_LIB = '0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2'
 const EIP1271_MAGIC_VALUE = '0x1626ba7e'
 
@@ -83,7 +83,7 @@ function App() {
             <p className="tagline">Safe Tools fixes this with EIP-712 message signing and EIP-1271 verification using Safe's official SignMessageLib contract.</p>
             
             <p className="description">
-              Creates on-chain transactions that store your message hash in the SignMessageLib contract, enabling cryptographic proof of Safe ownership that's verifiable by any service supporting EIP-1271.
+              Creates onchain transactions that store your message hash in the SignMessageLib contract, enabling cryptographic proof of Safe ownership that's verifiable by any service supporting EIP-1271.
             </p>
 
             <p className="description">
@@ -94,10 +94,29 @@ function App() {
               <h3>Technical Features</h3>
               <ul>
                 <li>EIP-712 domain-separated message hashing</li>
-                <li>On-chain message storage via SignMessageLib contract</li>
+                <li>Onchain message storage via SignMessageLib contract</li>
                 <li>EIP-1271 signature verification standard compliance</li>
+                <li>Multi-signature support respecting Safe threshold requirements</li>
                 <li>Cryptographic proof of Safe ownership for authentication</li>
               </ul>
+            </div>
+
+            <div className="multi-sig-section">
+              <h3>Multi-Signature Support</h3>
+              <p className="note">
+                Automatically works with your Safe's signature threshold. For a 2/3 Safe, the transaction requires 2 owner signatures. 
+                For a 3/5 Safe, it needs 3 signatures. The Safe interface handles collecting all required signatures seamlessly.
+              </p>
+              <div className="multi-sig-flow">
+                <strong>Example for 2/3 Safe:</strong>
+                <ol>
+                  <li>Owner 1 initiates message signing → creates transaction</li>
+                  <li>Safe shows "Pending" status → needs 1 more signature</li>
+                  <li>Owner 2 signs the transaction → threshold met</li>
+                  <li>Transaction executes → message hash stored onchain</li>
+                  <li><strong>Result:</strong> All required owners effectively signed the message</li>
+                </ol>
+              </div>
             </div>
 
             <div className="instructions">
@@ -224,7 +243,7 @@ function App() {
       const messageData = ethers.toUtf8Bytes(message.trim())
       const txData = signMessageInterface.encodeFunctionData('signMessage', [messageData])
       
-      // Send the transaction to sign the message on-chain
+      // Send the transaction to sign the message onchain
       const { safeTxHash } = await sdk.txs.send({
         txs: [{
           to: signMessageLibAddress,
