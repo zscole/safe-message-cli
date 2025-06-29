@@ -15,15 +15,15 @@ Your Safe Tools app is now fully prepared for Safe App Directory listing accordi
 
 ## 🔗 Key Links
 
-- **Live App**: https://safe-e21vv432w-zscoles-projects.vercel.app
+- **Live App**: https://safe-message-cli-git-main-zscoles-projects.vercel.app
 - **GitHub Repo**: https://github.com/zscole/safe-message-cli
-- **Manifest**: https://safe-e21vv432w-zscoles-projects.vercel.app/manifest.json
+- **Manifest**: https://safe-message-cli-git-main-zscoles-projects.vercel.app/manifest.json
 
 ## 📝 Next Steps
 
 1. **Fill out the Google Form** (mentioned in Safe documentation)
 2. **Submit via Discord** with the following information:
-   - App URL: https://safe-e21vv432w-zscoles-projects.vercel.app
+   - App URL: https://safe-message-cli-git-main-zscoles-projects.vercel.app
    - Repository: https://github.com/zscole/safe-message-cli
    - Review documentation: `SAFE_APP_SUBMISSION.md`
 

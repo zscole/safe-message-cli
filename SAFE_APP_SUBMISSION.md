@@ -4,7 +4,7 @@
 
 **Name**: Safe Tools  
 **Description**: Sign and verify messages using your Gnosis Safe. Useful for proving Safe ownership or interacting with offchain services.  
-**Current URL**: https://safe-e21vv432w-zscoles-projects.vercel.app  
+**Current URL**: https://safe-message-cli-git-main-zscoles-projects.vercel.app  
 **GitHub Repository**: https://github.com/zscole/safe-message-cli  
 
 ## Submission Checklist
