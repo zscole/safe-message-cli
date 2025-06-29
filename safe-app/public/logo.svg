@@ -1,29 +1,26 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="128" height="128" rx="24" fill="#12FF80"/>
+  <!-- Green background -->
+  <rect width="128" height="128" rx="24" fill="#12ff80"/>
   
-  <!-- Safe body -->
-  <rect x="28" y="32" width="72" height="64" rx="8" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+  <!-- Safe body - cleaner rectangular design -->
+  <rect x="24" y="28" width="80" height="72" rx="8" fill="#0f172a"/>
   
-  <!-- Safe door -->
-  <rect x="34" y="38" width="60" height="52" rx="4" fill="#1e293b"/>
+  <!-- Safe door with subtle inner border -->
+  <rect x="32" y="36" width="64" height="56" rx="6" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
   
-  <!-- Combination dial outer -->
-  <circle cx="64" cy="64" r="18" fill="#64748b"/>
-  <circle cx="64" cy="64" r="14" fill="#0f172a"/>
+  <!-- Combination dial - simple and clean -->
+  <circle cx="64" cy="64" r="14" fill="#64748b"/>
+  <circle cx="64" cy="64" r="10" fill="#0f172a"/>
   
-  <!-- Dial markers -->
-  <circle cx="64" cy="48" r="1.5" fill="#12FF80"/>
-  <circle cx="78" cy="64" r="1.5" fill="#12FF80"/>
-  <circle cx="64" cy="80" r="1.5" fill="#12FF80"/>
-  <circle cx="50" cy="64" r="1.5" fill="#12FF80"/>
+  <!-- Dial markers - clean green dots -->
+  <circle cx="64" cy="52" r="1.5" fill="#12ff80"/>
+  <circle cx="76" cy="64" r="1.5" fill="#12ff80"/>
+  <circle cx="64" cy="76" r="1.5" fill="#12ff80"/>
+  <circle cx="52" cy="64" r="1.5" fill="#12ff80"/>
   
-  <!-- Center indicator -->
-  <circle cx="64" cy="64" r="3" fill="#12FF80"/>
+  <!-- Dial center -->
+  <circle cx="64" cy="64" r="3" fill="#12ff80"/>
   
-  <!-- Handle -->
-  <rect x="88" y="60" width="8" height="8" rx="4" fill="#64748b"/>
-  
-  <!-- Signature flourish -->
-  <path d="M36 104 Q48 100 56 104 Q64 108 72 104 Q80 100 92 104" stroke="#12FF80" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Handle - simple rectangle -->
+  <rect x="92" y="60" width="8" height="8" rx="2" fill="#64748b"/>
 </svg> 

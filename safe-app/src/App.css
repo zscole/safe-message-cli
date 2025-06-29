@@ -43,11 +43,24 @@ body {
   flex: 1;
 }
 
+.title-with-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
 .safe-app-title {
   font-size: 24px;
   font-weight: 700;
   color: #0f172a;
-  margin-bottom: 8px;
+  margin: 0;
   letter-spacing: -0.025em;
 }
 
@@ -436,10 +449,15 @@ body {
   padding: 48px 20px;
 }
 
+.connecting-screen .title-with-logo {
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
 .connecting-screen h2 {
   font-size: 24px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin: 0;
   color: #0f172a;
   letter-spacing: -0.025em;
 }
@@ -478,6 +496,11 @@ body {
 
   .safe-app-title {
     font-size: 20px;
+  }
+
+  .logo {
+    width: 24px;
+    height: 24px;
   }
 
   .safe-app-description {

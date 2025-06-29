@@ -54,7 +54,10 @@ function App() {
     return (
       <div className="safe-app">
         <div className="connecting-screen">
-          <h2>Safe Tools</h2>
+          <div className="title-with-logo">
+            <img src="/logo.svg" alt="Safe Tools" className="logo" />
+            <h2>Safe Tools</h2>
+          </div>
           <p>Connecting to Safe...</p>
         </div>
       </div>
@@ -189,7 +192,10 @@ function App() {
     <div className="safe-app">
       <div className="safe-app-header">
         <div className="header-content">
-          <h1 className="safe-app-title">Safe Tools</h1>
+          <div className="title-with-logo">
+            <img src="/logo.svg" alt="Safe Tools" className="logo" />
+            <h1 className="safe-app-title">Safe Tools</h1>
+          </div>
           <p className="safe-app-description">
             Sign and verify messages using your Gnosis Safe. Useful for proving Safe ownership or interacting with offchain services.
           </p>
