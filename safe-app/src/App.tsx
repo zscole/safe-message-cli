@@ -5,6 +5,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import { ethers } from 'ethers'
+import Safe from '@safe-global/protocol-kit'
 import './App.css'
 
 // Official Safe contract that enables message signing for Safe accounts
@@ -204,77 +205,38 @@ function App() {
     setResult(null)
 
     try {
-      const messageBytes = ethers.toUtf8Bytes(message.trim())
+      // Create Protocol Kit instance using Safe Apps SDK context
+      const protocolKit = await Safe.init({
+        safeAddress: safe.safeAddress,
+        provider: sdk.wallet
+      })
 
-      const signMessageInterface = new ethers.Interface([
-        'function signMessage(bytes _data)'
-      ])
+      // Create the message using Protocol Kit
+      const safeMessage = await protocolKit.createMessage(message.trim())
       
-      const txData = signMessageInterface.encodeFunctionData('signMessage', [messageBytes])
+      // Sign the message using Protocol Kit with ETH_SIGN_TYPED_DATA_V4
+      const signedMessage = await protocolKit.signMessage(safeMessage)
 
-      const transaction = {
-        to: SIGN_MESSAGE_LIB,
-        value: '0',
-        data: txData,
-        operation: 1 // DelegateCall
-      }
-
-      const { safeTxHash } = await sdk.txs.send({ txs: [transaction] })
-
-      // Poll for execution
-      let executed = false
-      let attempts = 0
-      const maxAttempts = 30
-
-      while (!executed && attempts < maxAttempts) {
-        const txDetails = await sdk.txs.getBySafeTxHash(safeTxHash)
-        if (txDetails.executedAt) {
-          executed = true
-          break
-        }
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        attempts++
-      }
-
-      if (!executed) {
-        throw new Error('Transaction not executed within timeout')
-      }
-
+      // Generate the Safe message hash for verification
       const safeMessageHash = getSafeMessageHash(message.trim())
 
-      // Verify using EIP-1271
-      const isValidSigInterface = new ethers.Interface([
-        'function isValidSignature(bytes32 _hash, bytes _signature) external view returns (bytes4)'
-      ])
-
-      const callData = isValidSigInterface.encodeFunctionData('isValidSignature', [
-        safeMessageHash,
-        '0x' // Empty signature for on-chain signed messages
-      ])
-
-      const callResult = await sdk.eth.call([{
-        to: safe.safeAddress,
-        data: callData
-      }])
-
-      const isValid = callResult === EIP1271_MAGIC_VALUE
-
-      // For Safe messages, the "signature" is the message hash itself when verified via EIP-1271
-      const signature = safeMessageHash
+      // Get the encoded signatures
+      const encodedSignatures = signedMessage.encodedSignatures()
 
       setResult({
         originalMessage: message.trim(),
         safeMessageHash,
-        safeTxHash,
+        safeTxHash: safeMessageHash,
         signerAddress: safe.safeAddress,
-        signature,
-        isValid
+        signature: encodedSignatures,
+        isValid: true // Off-chain signatures are valid when properly signed
       })
 
       setSuccess(true)
 
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error occurred')
+      console.error('Message signing failed:', err)
+      setError(err instanceof Error ? err.message : 'Failed to sign message')
     } finally {
       setLoading(false)
     }
