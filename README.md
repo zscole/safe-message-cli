@@ -56,6 +56,12 @@ Global install: `npm install -g .` then use `safe-sign`, `safe-verify`, etc.
 
 Both use the same EIP-712 domain separation for message compatibility.
 
+## Deployment
+
+**Working Safe App:** https://safe-message-cli-git-main-zscoles-projects.vercel.app
+
+For deployment instructions and troubleshooting Vercel authentication issues, see [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md).
+
 ## Standards
 
 - EIP-712 typed data with Safe domain
