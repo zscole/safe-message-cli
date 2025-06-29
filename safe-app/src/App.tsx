@@ -80,11 +80,10 @@ function App() {
               Gnosis Safe doesn't support message signing out of the box. That means you can't easily prove you own a Safe, authenticate offchain, or generate signatures tied to Safe-based identity.
             </p>
             
-            <p className="tagline">Safe Tools fixes this with the easiest way to sign and verify messages with your Gnosis Safe.</p>
+            <p className="tagline">Safe Tools fixes this with EIP-712 message signing and EIP-1271 verification using Safe's official SignMessageLib contract.</p>
             
             <p className="description">
-              Use it to prove ownership, generate verifiable signatures, or connect your Safe to offchain systems. 
-              Built for simple, reliable message signing without extra setup or painful workarounds.
+              Creates on-chain transactions that store your message hash in the SignMessageLib contract, enabling cryptographic proof of Safe ownership that's verifiable by any service supporting EIP-1271.
             </p>
 
             <p className="description">
@@ -92,11 +91,12 @@ function App() {
             </p>
 
             <div className="features">
-              <h3>What it's for</h3>
+              <h3>Technical Features</h3>
               <ul>
-                <li>Sign messages from your Safe</li>
-                <li>Authenticate with apps and services</li>
-                <li>Prove Safe ownership onchain or offchain</li>
+                <li>EIP-712 domain-separated message hashing</li>
+                <li>On-chain message storage via SignMessageLib contract</li>
+                <li>EIP-1271 signature verification standard compliance</li>
+                <li>Cryptographic proof of Safe ownership for authentication</li>
               </ul>
             </div>
 
@@ -109,10 +109,10 @@ function App() {
                 <li>
                   Paste: 
                   <div className="url-with-copy">
-                    <code>https://safetools.io</code>
+                    <code>https://safe-message-cli-git-main-zscoles-projects.vercel.app</code>
                     <button 
                       className="copy-button-inline"
-                      onClick={() => copyToClipboard('https://safetools.io')}
+                      onClick={() => copyToClipboard('https://safe-message-cli-git-main-zscoles-projects.vercel.app')}
                       title="Copy URL"
                     >
                       Copy
@@ -143,11 +143,15 @@ function App() {
                   </div>
                   <div className="example-item">
                     <span className="example-label">Safe address used:</span>
-                    <code className="example-value">0x1234567890123456789012345678901234567890</code>
+                    <code className="example-value">0x9CFe9dc15b6cA16147dF1b93E487bAaDd422F693</code>
                   </div>
                   <div className="example-item">
-                    <span className="example-label">Resulting signature:</span>
-                    <code className="example-value">0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab</code>
+                    <span className="example-label">Safe transaction hash:</span>
+                    <code className="example-value">0xbfddd739e0a9a49d6885ccded16267760649505bdd589703cc833364904a9e4c</code>
+                  </div>
+                  <div className="example-item">
+                    <span className="example-label">EIP-1271 verification:</span>
+                    <code className="example-value">✓ Valid (stored in SignMessageLib)</code>
                   </div>
                 </div>
               )}
