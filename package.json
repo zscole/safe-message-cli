@@ -1,7 +1,7 @@
 {
   "name": "safe-message-tools",
   "version": "1.0.0",
-  "description": "Safe message signing with CLI tools and web interface",
+  "description": "The easiest way to sign and verify messages with your Gnosis Safe",
   "type": "module",
   "bin": {
     "safe-sign": "./cli/sign.js",
@@ -28,11 +28,11 @@
   ],
   "author": "Zak Cole <zcole@linux.com>",
   "license": "MIT",
-  "repository": "github:zscole/safe-message-tools",
+  "repository": "github:zscole/safe-message-cli",
   "bugs": {
-    "url": "https://github.com/zscole/safe-message-tools/issues"
+    "url": "https://github.com/zscole/safe-message-cli/issues"
   },
-  "homepage": "https://github.com/zscole/safe-message-tools#readme",
+  "homepage": "https://github.com/zscole/safe-message-cli#readme",
   "dependencies": {
     "ethers": "^6.8.0",
     "yargs": "^17.7.2"
