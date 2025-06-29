@@ -13,18 +13,28 @@ body {
   line-height: 1.6;
   color: #121312;
   background: #f7f7f7;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
 .safe-app {
-  max-width: 100%;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 800px;
+  min-height: 80vh;
   background: white;
   display: flex;
   flex-direction: column;
+  border: 3px solid #12ff80;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .safe-app-header {
-  padding: 24px;
+  padding: 24px 32px;
   border-bottom: 1px solid #e2e8f0;
   display: flex;
   justify-content: space-between;
@@ -36,6 +46,8 @@ body {
   font-weight: 700;
   color: #121312;
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .safe-info {
@@ -56,11 +68,15 @@ body {
   font-size: 12px;
   color: #636669;
   font-weight: 500;
+  background: #12ff80;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #121312;
 }
 
 .safe-app-content {
   flex: 1;
-  padding: 24px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -73,7 +89,7 @@ body {
 }
 
 .input-section label {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #121312;
 }
@@ -85,7 +101,7 @@ body {
   border: 2px solid #e2e8f0;
   border-radius: 8px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
   resize: vertical;
   transition: border-color 0.2s;
@@ -151,7 +167,7 @@ body {
 
 .error-card {
   background: #fff1f0;
-  border: 1px solid #ffcdd2;
+  border: 2px solid #ffcdd2;
   border-radius: 12px;
   padding: 20px;
 }
@@ -171,7 +187,7 @@ body {
 
 .result-card {
   background: #f8fff9;
-  border: 1px solid #c8e6c9;
+  border: 2px solid #c8e6c9;
   border-radius: 12px;
   padding: 24px;
   display: flex;
@@ -232,9 +248,10 @@ body {
 }
 
 .footer {
-  padding: 24px;
+  padding: 24px 32px;
   border-top: 1px solid #e2e8f0;
   margin-top: auto;
+  text-align: center;
 }
 
 .footer a {
@@ -249,10 +266,20 @@ body {
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
+  body {
+    padding: 10px;
+    align-items: flex-start;
+  }
+
+  .safe-app {
+    min-height: 90vh;
+  }
+
   .safe-app-header {
     flex-direction: column;
     gap: 16px;
     align-items: flex-start;
+    padding: 20px;
   }
 
   .safe-info {
@@ -264,7 +291,7 @@ body {
   }
 
   .safe-app-content {
-    padding: 16px;
+    padding: 20px;
   }
 
   .button-section {
