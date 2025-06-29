@@ -28,6 +28,7 @@ function App() {
   const [error, setError] = useState('')
   const [showAddressTooltip, setShowAddressTooltip] = useState(false)
   const [isDirectAccess, setIsDirectAccess] = useState(false)
+  const [showExample, setShowExample] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -104,7 +105,19 @@ function App() {
                 <li>Go to <a href="https://app.safe.global" target="_blank" rel="noreferrer">app.safe.global</a></li>
                 <li>Open the <strong>Apps</strong> tab in your Safe</li>
                 <li>Click <strong>Add Custom App</strong></li>
-                <li>Paste: <code>https://safe-message-cli-git-main-zscoles-projects.vercel.app</code></li>
+                <li>
+                  Paste: 
+                  <div className="url-with-copy">
+                    <code>https://safetools.io</code>
+                    <button 
+                      className="copy-button-inline"
+                      onClick={() => copyToClipboard('https://safetools.io')}
+                      title="Copy URL"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </li>
               </ol>
               <p className="note">Once added, Safe Tools will appear in your app list for easy message signing.</p>
               
@@ -112,6 +125,31 @@ function App() {
               <p className="note">
                 Install globally with <code>npm install -g safe-message-tools</code> for command-line access to signing, verification, hardware wallet support, and multi-signature coordination.
               </p>
+            </div>
+
+            <div className="example-section">
+              <button 
+                className="example-toggle"
+                onClick={() => setShowExample(!showExample)}
+              >
+                Example signed message {showExample ? '▲' : '▼'}
+              </button>
+              {showExample && (
+                <div className="example-output">
+                  <div className="example-item">
+                    <span className="example-label">Original message:</span>
+                    <code className="example-value">Prove ownership of Safe for domain verification</code>
+                  </div>
+                  <div className="example-item">
+                    <span className="example-label">Safe address used:</span>
+                    <code className="example-value">0x1234567890123456789012345678901234567890</code>
+                  </div>
+                  <div className="example-item">
+                    <span className="example-label">Resulting signature:</span>
+                    <code className="example-value">0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab</code>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="footer-info">

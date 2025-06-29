@@ -563,6 +563,92 @@ body {
   text-decoration: underline;
 }
 
+/* URL with copy button */
+.url-with-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+.copy-button-inline {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+
+.copy-button-inline:hover {
+  background: #12ff80;
+  border-color: #12ff80;
+  color: #0f172a;
+}
+
+/* Example section */
+.example-section {
+  margin-bottom: 32px;
+}
+
+.example-toggle {
+  background: none;
+  border: none;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s ease;
+}
+
+.example-toggle:hover {
+  color: #64748b;
+}
+
+.example-output {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.example-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.example-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.example-value {
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  font-size: 13px;
+  color: #0f172a;
+  background: white;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
 /* Connecting Screen */
 .connecting-screen {
   text-align: center;
@@ -646,6 +732,27 @@ body {
   .context {
     font-size: 14px;
     padding: 10px 12px;
+  }
+
+  .url-with-copy {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .example-toggle {
+    font-size: 14px;
+  }
+
+  .example-output {
+    padding: 12px;
+  }
+
+  .example-value {
+    font-size: 12px;
+    padding: 6px 8px;
   }
 
   .button-section {
