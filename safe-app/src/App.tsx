@@ -138,8 +138,22 @@ function App() {
       <div className="safe-app-header">
         <h1>Message Signing</h1>
         <div className="safe-info">
-          <span className="safe-address">{safe.safeAddress}</span>
-          <span className="chain-id">Chain {safe.chainId}</span>
+          <div className="safe-address-container">
+            <span className="safe-address-label">Safe Address</span>
+            <span className="safe-address">{safe.safeAddress}</span>
+          </div>
+          <div className="chain-info-container">
+            <span className="chain-label">Network</span>
+            <span className="chain-id">
+              {safe.chainId === 1 ? 'Ethereum Mainnet' : 
+               safe.chainId === 11155111 ? 'Sepolia Testnet' :
+               safe.chainId === 5 ? 'Goerli Testnet' :
+               safe.chainId === 137 ? 'Polygon Mainnet' :
+               safe.chainId === 10 ? 'Optimism Mainnet' :
+               safe.chainId === 42161 ? 'Arbitrum One' :
+               `Chain ${safe.chainId}`}
+            </span>
+          </div>
         </div>
       </div>
 

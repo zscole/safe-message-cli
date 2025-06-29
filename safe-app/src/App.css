@@ -54,7 +54,24 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  gap: 16px;
+}
+
+.safe-address-container,
+.chain-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 4px;
+}
+
+.safe-address-label,
+.chain-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #636669;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .safe-address {
@@ -66,11 +83,10 @@ body {
 
 .chain-id {
   font-size: 12px;
-  color: #636669;
-  font-weight: 500;
+  font-weight: 600;
   background: #12ff80;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
   color: #121312;
 }
 
@@ -283,6 +299,11 @@ body {
   }
 
   .safe-info {
+    align-items: flex-start;
+  }
+
+  .safe-address-container,
+  .chain-info-container {
     align-items: flex-start;
   }
 
