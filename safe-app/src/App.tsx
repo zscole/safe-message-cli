@@ -19,6 +19,7 @@ function App() {
     safeMessageHash: string
     safeTxHash: string
     signerAddress: string
+    signature: string
     isValid: boolean
   } | null>(null)
   const [error, setError] = useState('')
@@ -141,11 +142,15 @@ function App() {
 
       const isValid = callResult === EIP1271_MAGIC_VALUE
 
+      // For Safe messages, the "signature" is the message hash itself when verified via EIP-1271
+      const signature = safeMessageHash
+
       setResult({
         originalMessage: message.trim(),
         safeMessageHash,
         safeTxHash,
         signerAddress: safe.safeAddress,
+        signature,
         isValid
       })
 
@@ -227,10 +232,6 @@ function App() {
       </div>
 
       <div className="main-content">
-        <div className="helper-text">
-          This tool signs messages using your connected Safe.
-        </div>
-
         <div className="input-section">
           <label htmlFor="message-input">Message</label>
           <textarea
@@ -289,7 +290,7 @@ function App() {
             <h3>Signature Result</h3>
             
             <div className="result-item">
-              <label>Message</label>
+              <label>Signed Message</label>
               <div className="result-content">
                 <div className="result-text">{result.originalMessage}</div>
                 <button 
@@ -306,51 +307,34 @@ function App() {
             </div>
 
             <div className="result-item">
-              <label>Signer Address</label>
+              <label>Safe Address Used</label>
               <div className="result-content">
                 <div className="code-block">{result.signerAddress}</div>
                 <button 
                   className="copy-button"
                   onClick={() => copyToClipboard(result.signerAddress)}
-                  title="Copy signer address"
+                  title="Copy safe address"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                   </svg>
                 </button>
               </div>
             </div>
 
             <div className="result-item">
-              <label>Message Hash</label>
+              <label>Signature</label>
               <div className="result-content">
-                <div className="code-block">{result.safeMessageHash}</div>
+                <div className="code-block">{result.signature}</div>
                 <button 
                   className="copy-button"
-                  onClick={() => copyToClipboard(result.safeMessageHash)}
-                  title="Copy message hash"
+                  onClick={() => copyToClipboard(result.signature)}
+                  title="Copy signature"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <div className="result-item">
-              <label>Transaction Hash</label>
-              <div className="result-content">
-                <div className="code-block">{result.safeTxHash}</div>
-                <button 
-                  className="copy-button"
-                  onClick={() => copyToClipboard(result.safeTxHash)}
-                  title="Copy transaction hash"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                   </svg>
                 </button>
               </div>
@@ -368,11 +352,7 @@ function App() {
 
       <div className="footer">
         <div className="footer-links">
-          <a href="https://x.com/0xzak" target="_blank" rel="noreferrer">Zak Cole</a>
-          <span className="separator">·</span>
-          <a href="https://numbergroup.xyz" target="_blank" rel="noreferrer">Number Group</a>
-          <span className="separator">·</span>
-          <a href="https://github.com/zscole/safe-message-cli" target="_blank" rel="noreferrer">GitHub</a>
+          Built by <a href="https://x.com/0xzak" target="_blank" rel="noreferrer">Zak Cole</a> at <a href="https://numbergroup.xyz" target="_blank" rel="noreferrer">Number Group</a> · <a href="https://github.com/zscole/safe-message-cli" target="_blank" rel="noreferrer">View Source</a>
         </div>
       </div>
     </div>

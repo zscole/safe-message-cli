@@ -104,6 +104,7 @@ body {
   padding: 4px 8px;
   border-radius: 4px;
   color: #0f172a;
+  cursor: default;
 }
 
 .copy-button {
@@ -153,16 +154,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.helper-text {
-  font-size: 14px;
-  color: #64748b;
-  text-align: center;
-  padding: 12px 16px;
-  background: #f1f5f9;
-  border-radius: 6px;
-  border-left: 3px solid #12ff80;
 }
 
 /* Input Section */
@@ -421,26 +412,22 @@ body {
 }
 
 .footer-links {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
+  text-align: center;
   font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
 }
 
 .footer-links a {
   color: #64748b;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .footer-links a:hover {
-  color: #12ff80;
-}
-
-.separator {
-  color: #cbd5e1;
+  color: #0f172a;
+  text-decoration: underline;
 }
 
 /* Connecting Screen */
@@ -524,11 +511,6 @@ body {
     font-size: 11px;
   }
 
-  .footer-links {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
   .address-tooltip {
     right: auto;
     left: 0;
@@ -548,11 +530,6 @@ body {
 
   .main-content {
     gap: 16px;
-  }
-
-  .helper-text {
-    font-size: 13px;
-    padding: 10px 12px;
   }
 
   .safe-app-title {
