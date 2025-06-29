@@ -208,12 +208,28 @@ function App() {
       // Generate the Safe message hash for EIP-712 signing
       const safeMessageHash = getSafeMessageHash(message.trim())
 
-      // For now, let's create a placeholder signature and log the SDK to see what's available
-      console.log('Safe Apps SDK:', sdk)
-      console.log('SDK wallet:', sdk.wallet)
+      // Use Safe Apps SDK to sign the message using the SignMessageLib approach
+      // This creates a transaction that calls the SignMessageLib contract to store the message hash
+      const signMessageLibAddress = '0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2'
       
-      // Placeholder signature until we can determine the correct SDK method
-      const signResult = `0x${safeMessageHash.slice(2)}${'a'.repeat(130)}`
+      // Create the transaction data for calling signMessage on SignMessageLib
+      const signMessageInterface = new ethers.Interface([
+        'function signMessage(bytes memory _data)'
+      ])
+      
+      const messageData = ethers.toUtf8Bytes(message.trim())
+      const txData = signMessageInterface.encodeFunctionData('signMessage', [messageData])
+      
+      // Send the transaction to sign the message on-chain
+      const { safeTxHash } = await sdk.txs.send({
+        txs: [{
+          to: signMessageLibAddress,
+          value: '0',
+          data: txData
+        }]
+      })
+      
+      const signResult = safeTxHash
 
       setResult({
         originalMessage: message.trim(),
