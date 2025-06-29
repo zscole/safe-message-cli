@@ -1,5 +1,6 @@
 // MIT License
 // © Zak Cole — https://numbergroup.xyz (@zscole)
+// Updated with logo branding
 
 import React, { useState, useRef, useEffect } from 'react'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
