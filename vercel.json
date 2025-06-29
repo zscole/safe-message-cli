@@ -3,11 +3,32 @@
   "outputDirectory": "safe-app/dist",
   "headers": [
     {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-Requested-With, content-type, Authorization"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
-          "key": "X-Frame-Options",
-          "value": "sameorigin"
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' https://app.safe.global https://*.safe.global"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
         }
       ]
     }
