@@ -718,7 +718,7 @@ body::before {
   font-size: 16px;
   color: #ff0000;
   font-weight: 500;
-  margin: 0 0 16px 0;
+  margin: 0 0 2rem 0;
   line-height: 1.4;
   padding: 12px 16px;
   background: #110000;
@@ -751,6 +751,46 @@ body::before {
   margin-bottom: 32px;
 }
 
+.instructions {
+  padding: 1.5rem;
+  background: #001100;
+  border: 1px solid #00ff00;
+  border-radius: 0;
+  box-shadow: 
+    0 0 10px rgba(0, 255, 0, 0.2),
+    inset 0 0 10px rgba(0, 255, 0, 0.05);
+}
+
+.multi-sig-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #001100;
+  border: 1px solid #00ff00;
+  border-radius: 0;
+  box-shadow: 
+    0 0 10px rgba(0, 255, 0, 0.2),
+    inset 0 0 10px rgba(0, 255, 0, 0.05);
+}
+
+.multi-sig-flow {
+  margin-top: 1rem;
+}
+
+.multi-sig-flow ol {
+  margin: 0.5rem 0 0 0;
+  padding-left: 20px;
+  font-weight: 600;
+}
+
+.multi-sig-flow li {
+  font-size: 15px;
+  color: #00ff00;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  font-family: 'Space Mono', 'Courier New', monospace;
+  text-shadow: 0 0 3px rgba(0, 255, 0, 0.6);
+}
+
 .features h3,
 .instructions h3 {
   font-size: 18px;
@@ -778,6 +818,7 @@ body::before {
 .instructions ol {
   margin: 0;
   padding-left: 20px;
+  font-weight: 600;
 }
 
 .features li,
@@ -785,7 +826,7 @@ body::before {
   font-size: 15px;
   color: #00ff00;
   line-height: 1.4;
-  margin-bottom: 6px;
+  margin-bottom: 0.5rem;
   font-family: 'Space Mono', 'Courier New', monospace;
   text-shadow: 0 0 3px rgba(0, 255, 0, 0.6);
 }
@@ -804,7 +845,7 @@ body::before {
 .note {
   font-size: 14px;
   color: #cccccc;
-  margin: 12px 0 0 0;
+  margin: 1rem 0 0 0;
   font-style: italic;
   font-family: 'Space Mono', 'Courier New', monospace;
 }
@@ -878,8 +919,8 @@ body::before {
   color: #ffbf00;
   font-size: 16px;
   font-weight: 600;
-  cursor: pointer;
-  padding: 0;
+  cursor: url('https://cur.cursors-4u.net/others/oth-1/oth32.cur'), pointer;
+  padding: 8px 12px;
   margin: 0;
   display: flex;
   align-items: center;
@@ -889,6 +930,8 @@ body::before {
   text-transform: uppercase;
   letter-spacing: 1px;
   text-shadow: 0 0 5px rgba(255, 191, 0, 0.6);
+  border-radius: 0;
+  position: relative;
 }
 
 .example-toggle::before {
@@ -900,6 +943,8 @@ body::before {
 .example-toggle:hover {
   color: #00ff00;
   text-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+  background: rgba(0, 255, 0, 0.05);
+  text-decoration: underline;
 }
 
 .example-output {

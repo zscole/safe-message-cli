@@ -139,7 +139,7 @@ function App() {
                   </div>
                 </li>
               </ol>
-              <p className="note">Once added, Safe Tools will appear in your app list for easy message signing.</p>
+              <p className="note">Once added, Safe Tools will appear in your Safe's app drawer, ready to use.</p>
               
               <h3>For developers: CLI tools</h3>
               <p className="note">
@@ -152,7 +152,7 @@ function App() {
                 className="example-toggle"
                 onClick={() => setShowExample(!showExample)}
               >
-                Example signed message {showExample ? '▲' : '▼'}
+                {showExample ? '▼' : '▶'} Example signed message
               </button>
               {showExample && (
                 <div className="example-output">
@@ -304,7 +304,7 @@ function App() {
             <h1 className="safe-app-title">Safe Tools</h1>
           </div>
           <p className="safe-app-description">
-            Sign and verify messages using your Gnosis Safe. Useful for proving Safe ownership or interacting with offchain services.
+            Sign and verify messages directly from your Gnosis Safe. Useful for proving Safe ownership or interacting with offchain services.
           </p>
         </div>
         <div className="safe-info">
