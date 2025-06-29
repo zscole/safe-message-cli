@@ -25,6 +25,7 @@ function App() {
   } | null>(null)
   const [error, setError] = useState('')
   const [showAddressTooltip, setShowAddressTooltip] = useState(false)
+  const [isDirectAccess, setIsDirectAccess] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
@@ -32,6 +33,16 @@ function App() {
       textareaRef.current.focus()
     }
   }, [connected])
+
+  useEffect(() => {
+    // Detect if app is accessed directly (not in iframe)
+    try {
+      setIsDirectAccess(window.self === window.top)
+    } catch {
+      // If we can't access window.top due to cross-origin, we're likely in an iframe
+      setIsDirectAccess(false)
+    }
+  }, [])
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -52,17 +63,66 @@ function App() {
   }
 
   if (!connected) {
-    return (
-      <div className="safe-app">
-        <div className="connecting-screen">
-          <div className="title-with-logo">
-            <img src="/logo.svg" alt="Safe Tools" className="logo" />
-            <h2>Safe Tools</h2>
+    if (isDirectAccess) {
+      // Show landing page for direct access
+      return (
+        <div className="safe-app">
+          <div className="landing-page">
+            <div className="title-with-logo">
+              <img src="/logo.svg" alt="Safe Tools" className="logo" />
+              <h1>Safe Tools</h1>
+            </div>
+            <p className="tagline">The easiest way to sign and verify messages with your Gnosis Safe.</p>
+            
+            <p className="description">
+              Use it to prove ownership, generate verifiable signatures, or connect your Safe to offchain systems. 
+              Built for simple, reliable message signing—no extra setup, no workarounds.
+            </p>
+
+            <div className="features">
+              <h3>What it's for</h3>
+              <ul>
+                <li>Sign messages from your Safe</li>
+                <li>Authenticate with apps and services</li>
+                <li>Prove Safe ownership onchain or offchain</li>
+              </ul>
+            </div>
+
+            <div className="instructions">
+              <h3>How to use it</h3>
+              <ol>
+                <li>Go to <a href="https://app.safe.global" target="_blank" rel="noreferrer">app.safe.global</a></li>
+                <li>Open the <strong>Apps</strong> tab in your Safe</li>
+                <li>Click <strong>Add Custom App</strong></li>
+                <li>Paste: <code>https://safe-message-cli-git-main-zscoles-projects.vercel.app</code></li>
+              </ol>
+              <p className="note">Once added, Safe Tools will appear in your app list.</p>
+            </div>
+
+            <div className="footer-info">
+              <p>
+                Built by <a href="https://x.com/0xzak" target="_blank" rel="noreferrer">Zak Cole</a> at{" "}
+                <a href="https://numbergroup.xyz" target="_blank" rel="noreferrer">Number Group</a> ·{" "}
+                <a href="https://github.com/zscole/safe-message-cli" target="_blank" rel="noreferrer">Source Code</a>
+              </p>
+            </div>
           </div>
-          <p>Connecting to Safe...</p>
         </div>
-      </div>
-    )
+      )
+    } else {
+      // Show connecting screen for iframe access (within Safe Apps)
+      return (
+        <div className="safe-app">
+          <div className="connecting-screen">
+            <div className="title-with-logo">
+              <img src="/logo.svg" alt="Safe Tools" className="logo" />
+              <h2>Safe Tools</h2>
+            </div>
+            <p>Connecting to Safe...</p>
+          </div>
+        </div>
+      )
+    }
   }
 
   const getSafeMessageHash = (message: string) => {
