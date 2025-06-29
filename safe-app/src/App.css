@@ -934,11 +934,7 @@ body::before {
   position: relative;
 }
 
-.example-toggle::before {
-  content: ">>> ";
-  color: #00ff00;
-  text-shadow: 0 0 5px rgba(0, 255, 0, 0.8);
-}
+
 
 .example-toggle:hover {
   color: #00ff00;
