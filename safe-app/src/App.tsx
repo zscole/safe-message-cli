@@ -72,11 +72,19 @@ function App() {
               <img src="/logo.svg" alt="Safe Tools" className="logo" />
               <h1>Safe Tools</h1>
             </div>
-            <p className="tagline">The easiest way to sign and verify messages with your Gnosis Safe.</p>
+            <p className="context">
+              Gnosis Safe doesn't support message signing out of the box. That means you can't easily prove you own a Safe, authenticate offchain, or generate signatures tied to Safe-based identity.
+            </p>
+            
+            <p className="tagline">Safe Tools fixes this with the easiest way to sign and verify messages with your Gnosis Safe.</p>
             
             <p className="description">
               Use it to prove ownership, generate verifiable signatures, or connect your Safe to offchain systems. 
               Built for simple, reliable message signing without extra setup or painful workarounds.
+            </p>
+
+            <p className="description">
+              Safe Tools works two ways: through this web interface (recommended for most users) or via <a href="https://github.com/zscole/safe-message-cli/tree/main/cli" target="_blank" rel="noreferrer">command-line tools</a> for developers and automation workflows.
             </p>
 
             <div className="features">
@@ -89,14 +97,19 @@ function App() {
             </div>
 
             <div className="instructions">
-              <h3>How to use it</h3>
+              <h3>How to use the Safe App</h3>
               <ol>
                 <li>Go to <a href="https://app.safe.global" target="_blank" rel="noreferrer">app.safe.global</a></li>
                 <li>Open the <strong>Apps</strong> tab in your Safe</li>
                 <li>Click <strong>Add Custom App</strong></li>
                 <li>Paste: <code>https://safe-message-cli-git-main-zscoles-projects.vercel.app</code></li>
               </ol>
-              <p className="note">Once added, Safe Tools will appear in your app list.</p>
+              <p className="note">Once added, Safe Tools will appear in your app list for easy message signing.</p>
+              
+              <h3>For developers: CLI tools</h3>
+              <p className="note">
+                Install globally with <code>npm install -g safe-message-tools</code> for command-line access to signing, verification, hardware wallet support, and multi-signature coordination.
+              </p>
             </div>
 
             <div className="footer-info">

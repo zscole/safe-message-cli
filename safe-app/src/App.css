@@ -463,6 +463,18 @@ body {
   letter-spacing: -0.025em;
 }
 
+.context {
+  font-size: 16px;
+  color: #ef4444;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+  padding: 12px 16px;
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+  border-radius: 6px;
+}
+
 .tagline {
   font-size: 18px;
   color: #64748b;
@@ -489,6 +501,10 @@ body {
   font-weight: 600;
   color: #0f172a;
   margin: 0 0 12px 0;
+}
+
+.instructions h3:not(:first-child) {
+  margin-top: 24px;
 }
 
 .features ul,
@@ -625,6 +641,11 @@ body {
 
   .description {
     font-size: 15px;
+  }
+
+  .context {
+    font-size: 14px;
+    padding: 10px 12px;
   }
 
   .button-section {
