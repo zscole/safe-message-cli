@@ -1,7 +1,7 @@
 {
   "name": "safe-message-tools",
-  "version": "1.0.0",
-  "description": "The easiest way to sign and verify messages with your Gnosis Safe",
+  "version": "1.1.0",
+  "description": "CLI tools for signing and verifying messages with Gnosis Safe. Supports EIP-712, EIP-1271, hardware wallets, and multi-signature coordination.",
   "type": "module",
   "bin": {
     "safe-sign": "./cli/sign.js",
@@ -14,8 +14,16 @@
     "dev": "cd safe-app && npm run dev",
     "build": "cd safe-app && npm install && npm run build",
     "install-all": "npm install && cd safe-app && npm install",
-    "test": "echo 'no tests' && exit 0"
+    "test": "echo 'no tests' && exit 0",
+    "prepublishOnly": "npm run test",
+    "postinstall": "echo 'Safe Tools CLI installed! Try: safe-sign --help'"
   },
+  "files": [
+    "cli/",
+    "lib/",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "safe-app",
     "gnosis-safe",
@@ -24,7 +32,11 @@
     "eip1271",
     "multisig",
     "message-signing",
-    "cli"
+    "cli",
+    "safe-tools",
+    "web3",
+    "crypto",
+    "signature-verification"
   ],
   "author": "Zak Cole <zcole@linux.com>",
   "license": "MIT",
@@ -32,7 +44,11 @@
   "bugs": {
     "url": "https://github.com/zscole/safe-message-cli/issues"
   },
-  "homepage": "https://github.com/zscole/safe-message-cli#readme",
+  "homepage": "https://www.safetools.io",
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/zscole"
+  },
   "dependencies": {
     "ethers": "^6.8.0",
     "yargs": "^17.7.2"
