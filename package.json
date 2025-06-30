@@ -4,11 +4,11 @@
   "description": "CLI tools for signing and verifying messages with Gnosis Safe. Supports EIP-712, EIP-1271, hardware wallets, and multi-signature coordination.",
   "type": "module",
   "bin": {
-    "safe-sign": "./cli/sign.js",
-    "safe-verify": "./cli/verify.js",
-    "safe-hw": "./cli/sign-hw.js",
-    "safe-collect": "./cli/collect-signatures.js",
-    "safe-tx": "./cli/safe-transaction.js"
+    "safe-sign": "cli/sign.js",
+    "safe-verify": "cli/verify.js",
+    "safe-hw": "cli/sign-hw.js",
+    "safe-collect": "cli/collect-signatures.js",
+    "safe-tx": "cli/safe-transaction.js"
   },
   "scripts": {
     "dev": "cd safe-app && npm run dev",
@@ -40,7 +40,10 @@
   ],
   "author": "Zak Cole <zcole@linux.com>",
   "license": "MIT",
-  "repository": "github:zscole/safe-message-cli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zscole/safe-message-cli.git"
+  },
   "bugs": {
     "url": "https://github.com/zscole/safe-message-cli/issues"
   },
@@ -60,4 +63,4 @@
   "engines": {
     "node": ">=18"
   }
-} 
+}
