@@ -1,8 +1,8 @@
 # Safe Tools
 
-The easiest way to sign and verify messages with your Gnosis Safe. Built for simple, reliable message signing without extra setup or painful workarounds. Oh, and the name is `safe-message-cli` because I originally built it as a CLI utility and then expanded it to a web app, but didn't really want to separate all the logic. I'll clean it up later. 
+The easiest way to sign and verify messages with your Gnosis Safe. Built for simple, reliable message signing with an authentic retro terminal interface. Features EIP-712 message signing, EIP-1271 verification, and MEW/MyCrypto-compatible output formats.
 
-[![Live App](https://img.shields.io/badge/Live%20App-safe--tools-12ff80?style=flat-square)](https://safe-message-cli-git-main-zscoles-projects.vercel.app)
+[![Live App](https://img.shields.io/badge/Live%20App-safetools.io-12ff80?style=flat-square)](https://www.safetools.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 
 ## 🚀 Quick Start
@@ -12,9 +12,9 @@ The easiest way to sign and verify messages with your Gnosis Safe. Built for sim
 1. Go to [app.safe.global](https://app.safe.global)
 2. Open the **Apps** tab in your Safe
 3. Click **Add Custom App**
-4. Paste: `https://safe-message-cli-git-main-zscoles-projects.vercel.app`
+4. Paste: `https://www.safetools.io`
 
-Once added, Safe Tools will appear in your app list for easy message signing.
+Once added, Safe Tools will appear in your Safe's app drawer for easy message signing.
 
 ### Install CLI Tools
 
@@ -33,12 +33,14 @@ npm install -g safe-message-tools
 
 ### Safe App Interface
 
-The web interface provides a clean, simple way to sign messages directly from your Safe:
+The web interface provides an authentic retro terminal experience for signing messages directly from your Safe:
 
-- Enter any message you want to sign
-- Approve the transaction in your Safe
-- Get back a verifiable signature that proves Safe ownership
-- Copy results for use in other applications
+- **Retro terminal UI**: Authentic 80s hacker aesthetic with scanlines and terminal effects
+- **Simple workflow**: Enter any message, approve the Safe transaction, get verifiable results  
+- **Multiple output formats**: Standard signature + MEW/MyCrypto-compatible JSON
+- **Copy-to-clipboard**: One-click copying for all signature data and JSON formats
+- **Multi-signature support**: Automatically handles Safe threshold requirements (2/3, 3/5, etc.)
+- **EIP-1271 verification**: Onchain signature validation using Safe's SignMessageLib contract
 
 ### CLI Tools
 
@@ -62,11 +64,12 @@ safe-collect --safe 0x... --message "Hello World" --rpc https://... --sig 0x... 
 
 Safe Tools uses the official Safe SignMessageLib contract and EIP-1271 standard:
 
-1. **EIP-712 hashing**: Messages are hashed using Safe's domain separator
-2. **Onchain signing**: Creates a transaction to the SignMessageLib contract  
-3. **Multi-signature support**: Respects Safe threshold requirements (e.g., 2/3, 3/5)
-4. **EIP-1271 verification**: Automatically verifies signature validity
-5. **Standard compliance**: Works with any service that supports EIP-1271
+1. **EIP-712 hashing**: Messages are hashed using Safe's domain separator for security
+2. **Onchain transaction**: Creates a transaction to SignMessageLib contract (`0xA65387F16B013cf2Af4605Ad8aA5ec25a2cbA3a2`)
+3. **Multi-signature coordination**: Safe interface handles threshold requirements automatically
+4. **Dual output formats**: Standard signature + MEW/MyCrypto-compatible JSON for broad compatibility
+5. **EIP-1271 verification**: Onchain signature validation that any service can verify
+6. **Cross-platform support**: Works in Safe Apps interface and as standalone CLI tools
 
 ## 🔧 Development
 
@@ -105,11 +108,30 @@ npm run build
 npm install -g .
 ```
 
+## 📋 Output Formats
+
+### Standard Signature Output
+- Original message text
+- Safe address used for signing
+- Signature/transaction hash
+- EIP-1271 verification status
+
+### MEW/MyCrypto-Compatible JSON
+```json
+{
+  "address": "0x9CFe9dc15b6cA16147dF1b93E487bAaDd422F693",
+  "msg": "Prove ownership of Safe for domain verification", 
+  "sig": "0xbfddd739e0a9a49d6885ccded16267760649505bdd589703cc833364904a9e4c",
+  "version": "2"
+}
+```
+
 ## 📋 Standards
 
 - **EIP-712**: Typed data signing with Safe domain separation
 - **EIP-1271**: Onchain signature verification standard
 - **Safe Apps SDK**: Official integration with Safe interface
+- **MEW/MyCrypto**: Compatible JSON signature format
 - **Browser compatible**: No Node.js dependencies in web interface
 
 ## 🛡️ Security
@@ -125,8 +147,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🔗 Links
 
-- **Live App**: https://safe-message-cli-git-main-zscoles-projects.vercel.app
-- **Safe Apps Directory**: Submit as custom app in your Safe
+- **Live App**: https://www.safetools.io
+- **Safe Apps**: Add as custom app in your Safe interface
 - **GitHub**: https://github.com/zscole/safe-message-cli
 
 ---
