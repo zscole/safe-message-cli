@@ -1032,18 +1032,27 @@ body::before {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   body {
-    padding: 12px;
+    padding: 8px;
     align-items: flex-start;
+  }
+
+  /* CRITICAL: Hide ASCII borders on mobile to prevent horizontal overflow */
+  .safe-app::before,
+  .safe-app::after {
+    display: none !important;
   }
 
   .safe-app {
     padding: 20px;
-    margin-top: 20px;
+    margin-top: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   .safe-app-header {
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     align-items: stretch;
   }
 
@@ -1057,100 +1066,197 @@ body::before {
   }
 
   .safe-app-title {
-    font-size: 20px;
+    font-size: 22px;
+    line-height: 1.2;
+    word-break: break-word;
   }
 
   .logo {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
   }
 
   .safe-app-description {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .safe-address {
     font-size: 13px;
+    word-break: break-all;
+  }
+
+  .safe-address-label,
+  .chain-label {
+    font-size: 12px;
+  }
+
+  .chain-id {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .message-input {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 16px;
+    min-height: 80px;
+  }
+
+  .input-section label {
+    font-size: 15px;
   }
 
   .landing-page {
-    padding: 32px 16px;
+    padding: 20px;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .landing-page h1 {
-    font-size: 28px;
+    font-size: 24px;
+    line-height: 1.2;
+    word-break: break-word;
   }
 
   .tagline {
-    font-size: 16px;
+    font-size: 14px;
+    line-height: 1.4;
   }
 
   .description {
     font-size: 15px;
+    line-height: 1.5;
   }
 
   .context {
     font-size: 14px;
-    padding: 10px 12px;
+    padding: 16px;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  .features h3,
+  .instructions h3 {
+    font-size: 16px;
+    word-break: break-word;
+  }
+
+  .features li,
+  .instructions p {
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .url-with-copy {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    margin-left: 0;
-    margin-top: 8px;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .url-with-copy code {
+    font-size: 13px;
+    padding: 12px;
+    word-break: break-all;
+    overflow-x: auto;
   }
 
   .example-toggle {
-    font-size: 14px;
+    font-size: 15px;
+    padding: 12px 16px;
   }
 
   .example-output {
-    padding: 12px;
+    padding: 16px;
   }
 
   .example-value {
     font-size: 12px;
-    padding: 6px 8px;
+    word-break: break-all;
+    line-height: 1.4;
+  }
+
+  .example-label {
+    font-size: 13px;
   }
 
   .button-section {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
 
   .primary-button,
   .secondary-button {
     width: 100%;
     justify-content: center;
+    font-size: 15px;
+    padding: 16px 20px;
   }
 
   .result-content {
     flex-direction: column;
     align-items: stretch;
-    gap: 6px;
+    gap: 12px;
+    word-break: break-all;
+  }
+
+  .result-item label {
+    font-size: 14px;
   }
 
   .copy-button {
+    padding: 8px 12px;
+    font-size: 13px;
     align-self: flex-end;
-    width: auto;
+  }
+
+  .copy-button-inline {
+    font-size: 13px;
+    padding: 8px 12px;
   }
 
   .code-block,
   .result-text {
-    font-size: 11px;
+    font-size: 12px;
+    line-height: 1.4;
+    padding: 12px;
+    overflow-x: auto;
+    word-break: break-all;
   }
 
   .address-tooltip {
     right: auto;
     left: 0;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .address-tooltip::after {
     right: auto;
     left: 12px;
   }
+
+  .error-card,
+  .result-card {
+    padding: 16px;
+  }
+
+  .error-card h3,
+  .result-card h3 {
+    font-size: 15px;
+  }
+
+  .error-card p {
+    font-size: 14px;
+    line-height: 1.4;
+  }
 }
 
 @media (max-width: 480px) {
+  body {
+    padding: 6px;
+  }
+
   .safe-app {
     padding: 16px;
   }
@@ -1160,6 +1266,49 @@ body::before {
   }
 
   .safe-app-title {
-    font-size: 18px;
+    font-size: 20px;
+  }
+
+  .safe-app-description {
+    font-size: 14px;
+  }
+
+  .landing-page {
+    padding: 16px;
+  }
+
+  .landing-page h1 {
+    font-size: 22px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .context {
+    font-size: 13px;
+    padding: 14px;
+  }
+
+  .url-with-copy code {
+    font-size: 12px;
+  }
+
+  .example-toggle {
+    font-size: 14px;
+  }
+
+  .primary-button {
+    font-size: 14px;
+    padding: 14px 18px;
+  }
+
+  .result-content {
+    font-size: 12px;
+  }
+
+  .code-block,
+  .result-text {
+    font-size: 11px;
   }
 } 
